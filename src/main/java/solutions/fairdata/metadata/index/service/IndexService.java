@@ -50,4 +50,8 @@ public class IndexService {
         
         repository.save(entry);
     }
+    
+    public Iterable<IndexEntry> getAllEntries() {
+        return repository.findAll();
+    }
 }

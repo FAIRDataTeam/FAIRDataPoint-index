@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+    <head>
+        <title>FAIR Data Point index</title>
+    </head>
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th>Endpoint</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry : ${entries}">
+                    <td th:text="${entry.endpoint}"></td>
+                    <td th:text="${entry.timestamp}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
