@@ -20,17 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.metadata.index.app;
+package solutions.fairdata.metadata.index.web.controller;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Import;
-import solutions.fairdata.metadata.index.web.WebConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication
-@Import(WebConfig.class)
-public class MetadataIndexApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(MetadataIndexApplication.class, args);
+@RestController
+@RequestMapping("/ping")
+public class PingController {
+    private static final Logger logger = LoggerFactory.getLogger(PingController.class);
+    
+    @GetMapping
+    public void receivePing(@RequestParam String endpoint) {
+        logger.info("Received ping from {}", endpoint);
     }
 }

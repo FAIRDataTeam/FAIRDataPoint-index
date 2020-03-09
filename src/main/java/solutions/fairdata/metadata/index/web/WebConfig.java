@@ -20,17 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.metadata.index.app;
+package solutions.fairdata.metadata.index.web;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Import;
-import solutions.fairdata.metadata.index.web.WebConfig;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@SpringBootApplication
-@Import(WebConfig.class)
-public class MetadataIndexApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(MetadataIndexApplication.class, args);
-    }
+@Configuration
+@ComponentScan
+public class WebConfig implements WebMvcConfigurer {
 }
