@@ -20,16 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.metadata.index.web;
+package solutions.fairdata.metadata.index.storage;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import solutions.fairdata.metadata.index.service.ServiceConfig;
+import org.springframework.data.repository.CrudRepository;
+import solutions.fairdata.metadata.index.domain.IndexEntry;
 
-@Configuration
-@ComponentScan
-@Import(ServiceConfig.class)
-public class WebConfig implements WebMvcConfigurer {
+public interface EntryRepository extends CrudRepository<IndexEntry, String> {
 }

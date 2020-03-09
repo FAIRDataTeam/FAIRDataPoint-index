@@ -20,16 +20,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.metadata.index.web;
+package solutions.fairdata.metadata.index.service;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import solutions.fairdata.metadata.index.service.ServiceConfig;
+import java.time.OffsetDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import solutions.fairdata.metadata.index.domain.IndexEntry;
+import solutions.fairdata.metadata.index.storage.EntryRepository;
 
-@Configuration
-@ComponentScan
-@Import(ServiceConfig.class)
-public class WebConfig implements WebMvcConfigurer {
+@Component
+public class IndexService {
+    private static final Logger logger = LoggerFactory.getLogger(IndexService.class);
+    
+    @Autowired
+    private EntryRepository repository;
+    
+    public void storeEntry(String endpoint) {
+        var entry = new IndexEntry();
+        entry.setEndpoint(endpoint);
+        entry.setTimestamp(OffsetDateTime.now().toString());
+        
+        if (repository.existsById(endpoint)) {
+            logger.info("Updating timestamp of existing entry {}", entry.getEndpoint());
+        } else {
+            logger.info("Storing new entry {}", entry.getEndpoint());
+        }
+        
+        repository.save(entry);
+    }
 }

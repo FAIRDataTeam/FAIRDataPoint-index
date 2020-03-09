@@ -24,18 +24,25 @@ package solutions.fairdata.metadata.index.web.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import solutions.fairdata.metadata.index.service.IndexService;
 
 @RestController
 @RequestMapping("/ping")
 public class PingController {
     private static final Logger logger = LoggerFactory.getLogger(PingController.class);
     
+    @Autowired
+    private IndexService service;
+    
     @GetMapping
     public void receivePing(@RequestParam String endpoint) {
         logger.info("Received ping from {}", endpoint);
+        
+        service.storeEntry(endpoint);
     }
 }
