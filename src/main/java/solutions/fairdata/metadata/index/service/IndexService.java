@@ -37,17 +37,22 @@ public class IndexService {
     @Autowired
     private EntryRepository repository;
     
-    public void storeEntry(String endpoint) {
-        var entry = new IndexEntry();
-        entry.setEndpoint(endpoint);
-        entry.setTimestamp(OffsetDateTime.now().toString());
+    public void storeEntry(String clientUrl) {
+        var entity = repository.findById(clientUrl);
+        var now = OffsetDateTime.now();
         
-        if (repository.existsById(endpoint)) {
-            logger.info("Updating timestamp of existing entry {}", entry.getEndpoint());
+        final IndexEntry entry;
+        if (entity.isPresent()) {
+            logger.info("Updating timestamp of existing entry {}", clientUrl);
+            entry = entity.orElseThrow();
         } else {
-            logger.info("Storing new entry {}", entry.getEndpoint());
+            logger.info("Storing new entry {}", clientUrl);
+            entry = new IndexEntry();
+            entry.setClientUrl(clientUrl);
+            entry.setRegistrationTime(now.toString());
         }
         
+        entry.setModificationTime(now.toString());
         repository.save(entry);
     }
     

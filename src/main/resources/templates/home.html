@@ -8,13 +8,15 @@
             <thead>
                 <tr>
                     <th>Endpoint</th>
-                    <th>Timestamp</th>
+                    <th>Registration</th>
+                    <th>Modification</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="entry : ${entries}">
-                    <td th:text="${entry.endpoint}"></td>
-                    <td th:text="${entry.timestamp}"></td>
+                    <td th:text="${entry.clientUrl}"></td>
+                    <td th:text="${entry.registrationTime}"></td>
+                    <td th:text="${entry.modificationTime}"></td>
                 </tr>
             </tbody>
         </table>

@@ -29,6 +29,7 @@ import lombok.Data;
 @RedisHash("entries")
 @Data
 public class IndexEntry {
-    @Id private String endpoint;
-    private String timestamp;
+    @Id private String clientUrl;
+    private String registrationTime;
+    private String modificationTime;
 }

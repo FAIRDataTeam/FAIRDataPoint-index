@@ -30,5 +30,5 @@ import lombok.Data;
 public class PingDto {
     @NotNull
     @URL
-    private String endpoint;
+    private String clientUrl;
 }

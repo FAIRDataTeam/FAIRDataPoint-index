@@ -36,7 +36,7 @@ import solutions.fairdata.metadata.index.service.IndexService;
 import solutions.fairdata.metadata.index.web.dto.PingDto;
 
 @RestController
-@RequestMapping("/ping")
+@RequestMapping("/")
 public class PingController {
     private static final Logger logger = LoggerFactory.getLogger(PingController.class);
     
@@ -48,6 +48,6 @@ public class PingController {
     public void receivePing(@RequestBody @Valid PingDto ping) {
         logger.info("Received ping from {}", ping);
         
-        service.storeEntry(ping.getEndpoint());
+        service.storeEntry(ping.getClientUrl());
     }
 }
