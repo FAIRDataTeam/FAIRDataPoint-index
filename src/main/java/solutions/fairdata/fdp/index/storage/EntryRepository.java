@@ -20,24 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.metadata.index.web.controller;
+package solutions.fairdata.fdp.index.storage;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import solutions.fairdata.metadata.index.service.IndexService;
+import org.springframework.data.repository.CrudRepository;
+import solutions.fairdata.fdp.index.domain.IndexEntry;
 
-@Controller
-@RequestMapping("/")
-public class HomeController {
-    @Autowired
-    private IndexService service;
-    
-    @GetMapping
-    public String home(Model model) {
-        model.addAttribute("entries", service.getAllEntries());
-        return "home";
-    }
+public interface EntryRepository extends CrudRepository<IndexEntry, String> {
 }

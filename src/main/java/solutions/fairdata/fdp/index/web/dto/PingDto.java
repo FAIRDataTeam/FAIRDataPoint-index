@@ -20,6 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package solutions.fairdata.fdp.index.web.dto;
 
-@javax.annotation.ParametersAreNonnullByDefault
-package solutions.fairdata.metadata.index.service;
+import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.URL;
+import lombok.Data;
+
+@Data
+public class PingDto {
+    @NotNull
+    @URL
+    private String clientUrl;
+}

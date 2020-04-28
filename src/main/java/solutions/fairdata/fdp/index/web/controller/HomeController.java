@@ -20,16 +20,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.metadata.index.domain;
+package solutions.fairdata.fdp.index.web.controller;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
-import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import solutions.fairdata.fdp.index.service.IndexService;
 
-@RedisHash("entries")
-@Data
-public class IndexEntry {
-    @Id private String clientUrl;
-    private String registrationTime;
-    private String modificationTime;
+@Controller
+@RequestMapping("/")
+public class HomeController {
+    @Autowired
+    private IndexService service;
+    
+    @GetMapping
+    public String home(Model model) {
+        model.addAttribute("entries", service.getAllEntries());
+        return "home";
+    }
 }

@@ -20,15 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.metadata.index.service;
+package solutions.fairdata.fdp.index.service;
 
 import java.time.OffsetDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import solutions.fairdata.metadata.index.domain.IndexEntry;
-import solutions.fairdata.metadata.index.storage.EntryRepository;
+import solutions.fairdata.fdp.index.domain.IndexEntry;
+import solutions.fairdata.fdp.index.storage.EntryRepository;
 
 @Component
 public class IndexService {

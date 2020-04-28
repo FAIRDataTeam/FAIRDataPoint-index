@@ -1,7 +1,7 @@
-# fair-metadata-index
-Index of FAIR Data Points.
+# FAIRDataPoint-index
+Index of FAIR Data Points
 
-[![Build Status](https://travis-ci.com/FAIRDataTeam/fair-metadata-index.svg?branch=develop)](https://travis-ci.com/FAIRDataTeam/fair-metadata-index)
+[![Build Status](https://travis-ci.com/FAIRDataTeam/FAIRDataPoint-index.svg?branch=develop)](https://travis-ci.com/FAIRDataTeam/FAIRDataPoint-index)
 
 # Introduction
 The index serves as a registry for [FAIR Data Point](https://github.com/FAIRDataTeam/FAIRDataPoint) deployments.

@@ -20,15 +20,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.metadata.index.service;
+package solutions.fairdata.fdp.index.web.controller;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import solutions.fairdata.metadata.index.storage.StorageConfig;
+import javax.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import solutions.fairdata.fdp.index.service.IndexService;
+import solutions.fairdata.fdp.index.web.dto.PingDto;
 
-@Configuration
-@ComponentScan
-@Import(StorageConfig.class)
-public class ServiceConfig {
+@RestController
+@RequestMapping("/")
+public class PingController {
+    private static final Logger logger = LoggerFactory.getLogger(PingController.class);
+    
+    @Autowired
+    private IndexService service;
+    
+    @PostMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void receivePing(@RequestBody @Valid PingDto ping) {
+        logger.info("Received ping from {}", ping);
+        
+        service.storeEntry(ping.getClientUrl());
+    }
 }

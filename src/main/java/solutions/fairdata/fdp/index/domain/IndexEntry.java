@@ -20,6 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package solutions.fairdata.fdp.index.domain;
 
-@javax.annotation.ParametersAreNonnullByDefault
-package solutions.fairdata.metadata.index.web.dto;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+import lombok.Data;
+
+@RedisHash("entries")
+@Data
+public class IndexEntry {
+    @Id private String clientUrl;
+    private String registrationTime;
+    private String modificationTime;
+}
