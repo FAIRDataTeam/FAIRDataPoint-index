@@ -22,4 +22,4 @@
  */
 
 @javax.annotation.ParametersAreNonnullByDefault
-package solutions.fairdata.metadata.index.app;
+package solutions.fairdata.fdp.index.storage;

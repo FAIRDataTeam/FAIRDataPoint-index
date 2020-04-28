@@ -34,7 +34,7 @@
     </parent>
 
     <groupId>solutions.fairdata</groupId>
-    <artifactId>fair-metadata-index</artifactId>
+    <artifactId>fairdatapoint-index</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
     <inceptionYear>2020</inceptionYear>
@@ -73,6 +73,7 @@
     </dependencies>
 
     <build>
+        <finalName>fairdatapoint-index</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

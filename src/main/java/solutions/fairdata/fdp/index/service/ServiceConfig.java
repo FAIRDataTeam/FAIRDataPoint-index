@@ -20,17 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.metadata.index.app;
+package solutions.fairdata.fdp.index.service;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import solutions.fairdata.metadata.index.web.WebConfig;
+import solutions.fairdata.fdp.index.storage.StorageConfig;
 
-@SpringBootApplication
-@Import(WebConfig.class)
-public class MetadataIndexApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(MetadataIndexApplication.class, args);
-    }
+@Configuration
+@ComponentScan
+@Import(StorageConfig.class)
+public class ServiceConfig {
 }
