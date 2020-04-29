@@ -1,7 +1,8 @@
 # FAIRDataPoint-index
 Index of FAIR Data Points
 
-[![Build Status](https://travis-ci.com/FAIRDataTeam/FAIRDataPoint-index.svg?branch=develop)](https://travis-ci.com/FAIRDataTeam/FAIRDataPoint-index)
+[![FAIRDataPoint-index CI](https://github.com/FAIRDataTeam/FAIRDataPoint-index/workflows/FAIRDataPoint-index%20CI/badge.svg?branch=master)](https://github.com/FAIRDataTeam/FAIRDataPoint-index/actions)
+[![License](https://img.shields.io/github/license/FAIRDataTeam/FAIRDataPoint-index)](LICENSE)
 
 # Introduction
 The index serves as a registry for [FAIR Data Point](https://github.com/FAIRDataTeam/FAIRDataPoint) deployments.
