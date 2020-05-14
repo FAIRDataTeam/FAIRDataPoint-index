@@ -1,24 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
-    <head>
-        <title>FAIR Data Point index</title>
-    </head>
+<html lang="en"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+    <head></head>
     <body>
-        <table>
-            <thead>
-                <tr>
-                    <th>Endpoint</th>
-                    <th>Registration</th>
-                    <th>Modification</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="entry : ${entries}">
-                    <td th:text="${entry.clientUrl}"></td>
-                    <td th:text="${entry.registrationTime}"></td>
-                    <td th:text="${entry.modificationTime}"></td>
-                </tr>
-            </tbody>
-        </table>
+        <section layout:fragment="content">
+            <table class="table table-striped entries">
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th class="right">Registration</th>
+                        <th class="right">Modification</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="entry : ${entries}">
+                        <td class="endpoint">
+                            <a th:href="${entry.clientUrl}" th:text="${entry.clientUrl}" target="_blank"></a>
+                        </td>
+                        <td th:text="${entry.registrationTime}" class="timestamp"></td>
+                        <td th:text="${entry.modificationTime}" class="timestamp"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <script src="../static/js/localize-timestamps.js" th:src="@{/js/localize-timestamps.js}"></script>
+        </section>
     </body>
 </html>
