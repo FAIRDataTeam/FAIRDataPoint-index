@@ -22,8 +22,8 @@
  */
 package solutions.fairdata.fdp.index.storage;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import solutions.fairdata.fdp.index.domain.IndexEntry;
 
-public interface EntryRepository extends CrudRepository<IndexEntry, String> {
+public interface EntryRepository extends PagingAndSortingRepository<IndexEntry, String> {
 }
