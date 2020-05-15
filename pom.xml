@@ -68,18 +68,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        <!-- webjars -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>4.4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>3.5.1</version>
-        </dependency>
-
 
         <dependency>
             <groupId>com.github.spotbugs</groupId>
@@ -110,6 +98,54 @@
                      </includes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.10.0</version>
+                <configuration>
+                    <nodeVersion>v12.16.3</nodeVersion>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install-node-and-npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>npm-install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scss-compile</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run scss</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/node_modules/jquery/dist</directory>
+                <targetPath>static/js/jquery</targetPath>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/node_modules/popper.js/dist</directory>
+                <targetPath>static/js/popperjs</targetPath>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/node_modules/bootstrap/dist/js</directory>
+                <targetPath>static/js/bootstrap</targetPath>
+            </resource>
+        </resources>
     </build>
 </project>
