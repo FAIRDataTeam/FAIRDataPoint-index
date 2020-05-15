@@ -78,6 +78,19 @@
 
     <build>
         <finalName>fairdatapoint-index</finalName>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/node_modules/jquery/dist</directory>
+                <targetPath>static/js/jquery</targetPath>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/node_modules/bootstrap/dist/js</directory>
+                <targetPath>static/js/bootstrap</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -130,22 +143,5 @@
                 </executions>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>${project.basedir}/node_modules/jquery/dist</directory>
-                <targetPath>static/js/jquery</targetPath>
-            </resource>
-            <resource>
-                <directory>${project.basedir}/node_modules/popper.js/dist</directory>
-                <targetPath>static/js/popperjs</targetPath>
-            </resource>
-            <resource>
-                <directory>${project.basedir}/node_modules/bootstrap/dist/js</directory>
-                <targetPath>static/js/bootstrap</targetPath>
-            </resource>
-        </resources>
     </build>
 </project>
