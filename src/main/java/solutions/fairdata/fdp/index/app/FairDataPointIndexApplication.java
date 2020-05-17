@@ -24,11 +24,8 @@ package solutions.fairdata.fdp.index.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Import;
-import solutions.fairdata.fdp.index.web.WebConfig;
 
-@SpringBootApplication
-@Import(WebConfig.class)
+@SpringBootApplication(scanBasePackages = {"solutions.fairdata.fdp.index"})
 public class FairDataPointIndexApplication {
     public static void main(String[] args) {
         SpringApplication.run(FairDataPointIndexApplication.class, args);

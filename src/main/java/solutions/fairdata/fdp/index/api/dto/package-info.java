@@ -20,34 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.web.controller;
 
-import javax.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import solutions.fairdata.fdp.index.service.IndexService;
-import solutions.fairdata.fdp.index.api.dto.PingDTO;
-
-@RestController
-@RequestMapping("/")
-public class PingController {
-    private static final Logger logger = LoggerFactory.getLogger(PingController.class);
-    
-    @Autowired
-    private IndexService service;
-    
-    @PostMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void receivePing(@RequestBody @Valid PingDTO ping) {
-        logger.info("Received ping from {}", ping);
-        
-        service.storeEntry(ping.getClientUrl());
-    }
-}
+@javax.annotation.ParametersAreNonnullByDefault
+package solutions.fairdata.fdp.index.api.dto;
