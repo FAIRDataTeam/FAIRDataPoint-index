@@ -26,6 +26,8 @@ import java.time.OffsetDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import solutions.fairdata.fdp.index.domain.IndexEntry;
 import solutions.fairdata.fdp.index.storage.EntryRepository;
@@ -58,5 +60,9 @@ public class IndexService {
     
     public Iterable<IndexEntry> getAllEntries() {
         return repository.findAll();
+    }
+
+    public Page<IndexEntry> getEntriesPage(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 }
