@@ -43,8 +43,9 @@
         <!-- project settings -->
         <java.version>11</java.version>
         <license-plugin.version>3.0</license-plugin.version>
-        <spotbugs.version>4.0.0</spotbugs.version>
         <node.version>v12.16.3</node.version>
+        <spotbugs.version>4.0.0</spotbugs.version>
+        <springdoc.version>1.3.9</springdoc.version>
     </properties>
 
     <dependencies>
@@ -68,6 +69,17 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- springdoc -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-data-rest</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
 
         <dependency>
@@ -96,6 +108,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>

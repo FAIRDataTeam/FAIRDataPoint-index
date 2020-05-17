@@ -20,9 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.web.controller;
+package solutions.fairdata.fdp.index.api.controller;
 
 import javax.validation.Valid;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import solutions.fairdata.fdp.index.service.IndexService;
 import solutions.fairdata.fdp.index.api.dto.PingDTO;
 
+@Tag(name = "Ping")
 @RestController
 @RequestMapping("/")
 public class PingController {

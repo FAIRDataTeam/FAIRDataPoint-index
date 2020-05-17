@@ -70,8 +70,8 @@ public class IndexService {
     public EntryDTO toDTO(IndexEntry indexEntry) {
         EntryDTO dto = new EntryDTO();
         dto.setClientUrl(indexEntry.getClientUrl());
-        dto.setRegistrationTime(indexEntry.getRegistrationTime());
-        dto.setModificationTime(indexEntry.getModificationTime());
+        dto.setRegistrationTime(OffsetDateTime.parse(indexEntry.getRegistrationTime()));
+        dto.setModificationTime(OffsetDateTime.parse(indexEntry.getModificationTime()));
         return dto;
     }
 }

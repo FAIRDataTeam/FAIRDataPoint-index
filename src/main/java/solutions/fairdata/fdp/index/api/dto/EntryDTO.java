@@ -1,16 +1,21 @@
 package solutions.fairdata.fdp.index.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import org.hibernate.validator.constraints.URL;
+import javax.validation.constraints.NotNull;
+import java.time.OffsetDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
+@Schema(name = "Entry")
 public class EntryDTO {
+    @NotNull
+    @URL
     private String clientUrl;
-    private String registrationTime;
-    private String modificationTime;
+
+    @NotNull
+    private OffsetDateTime registrationTime;
+
+    @NotNull
+    private OffsetDateTime modificationTime;
 }
