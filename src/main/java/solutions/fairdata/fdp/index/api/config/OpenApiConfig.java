@@ -20,34 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.web.controller;
+package solutions.fairdata.fdp.index.api.config;
 
-import javax.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import solutions.fairdata.fdp.index.service.IndexService;
-import solutions.fairdata.fdp.index.web.dto.PingDto;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.info.BuildProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@RestController
-@RequestMapping("/")
-public class PingController {
-    private static final Logger logger = LoggerFactory.getLogger(PingController.class);
-    
+@Configuration
+public class OpenApiConfig {
+
     @Autowired
-    private IndexService service;
-    
-    @PostMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void receivePing(@RequestBody @Valid PingDto ping) {
-        logger.info("Received ping from {}", ping);
-        
-        service.storeEntry(ping.getClientUrl());
+    BuildProperties buildProperties;
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .components(new Components())
+                .info(
+                        new Info().title(
+                                "FAIR Data Point Index API"
+                        ).description(
+                                "This is OpenAPI documentation of FAIR Data Point Index REST API."
+                        ).version(
+                                buildProperties.getVersion()
+                        ).license(
+                                new License().name("MIT")
+                        )
+                );
     }
 }

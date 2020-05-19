@@ -20,15 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.web.dto;
+package solutions.fairdata.fdp.index.api;
 
-import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.URL;
-import lombok.Data;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import solutions.fairdata.fdp.index.service.ServiceConfig;
 
-@Data
-public class PingDto {
-    @NotNull
-    @URL
-    private String clientUrl;
+@Configuration
+@ComponentScan
+@Import(ServiceConfig.class)
+public class ApiConfig {
 }

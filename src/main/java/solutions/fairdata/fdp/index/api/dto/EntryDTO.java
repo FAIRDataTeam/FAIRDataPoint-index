@@ -20,14 +20,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.app;
+package solutions.fairdata.fdp.index.api.dto;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import org.hibernate.validator.constraints.URL;
+import javax.validation.constraints.NotNull;
+import java.time.OffsetDateTime;
 
-@SpringBootApplication(scanBasePackages = {"solutions.fairdata.fdp.index"})
-public class FairDataPointIndexApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(FairDataPointIndexApplication.class, args);
-    }
+@Data
+@Schema(name = "Entry")
+public class EntryDTO {
+    @NotNull
+    @URL
+    private String clientUrl;
+
+    @NotNull
+    private OffsetDateTime registrationTime;
+
+    @NotNull
+    private OffsetDateTime modificationTime;
 }

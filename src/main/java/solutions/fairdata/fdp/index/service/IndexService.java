@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import solutions.fairdata.fdp.index.api.dto.EntryDTO;
 import solutions.fairdata.fdp.index.domain.IndexEntry;
 import solutions.fairdata.fdp.index.storage.EntryRepository;
 
@@ -64,5 +65,13 @@ public class IndexService {
 
     public Page<IndexEntry> getEntriesPage(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    public EntryDTO toDTO(IndexEntry indexEntry) {
+        EntryDTO dto = new EntryDTO();
+        dto.setClientUrl(indexEntry.getClientUrl());
+        dto.setRegistrationTime(OffsetDateTime.parse(indexEntry.getRegistrationTime()));
+        dto.setModificationTime(OffsetDateTime.parse(indexEntry.getModificationTime()));
+        return dto;
     }
 }
