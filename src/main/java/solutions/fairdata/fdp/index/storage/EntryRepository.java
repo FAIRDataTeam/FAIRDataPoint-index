@@ -25,5 +25,8 @@ package solutions.fairdata.fdp.index.storage;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import solutions.fairdata.fdp.index.domain.IndexEntry;
 
+import java.util.Optional;
+
 public interface EntryRepository extends MongoRepository<IndexEntry, String> {
+    Optional<IndexEntry> findByClientUrl(String clientUrl);
 }

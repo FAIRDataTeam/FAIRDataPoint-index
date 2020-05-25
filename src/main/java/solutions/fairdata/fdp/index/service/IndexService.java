@@ -41,7 +41,7 @@ public class IndexService {
     private EntryRepository repository;
     
     public void storeEntry(String clientUrl) {
-        var entity = repository.findById(clientUrl);
+        var entity = repository.findByClientUrl(clientUrl);
         var now = OffsetDateTime.now();
         
         final IndexEntry entry;
