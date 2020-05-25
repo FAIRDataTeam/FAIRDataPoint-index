@@ -24,6 +24,7 @@ package solutions.fairdata.fdp.index.api.controller;
 
 import javax.validation.Valid;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,8 @@ public class PingController {
     
     @Autowired
     private IndexService service;
-    
+
+    @Operation(hidden = true)
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void receivePing(@RequestBody @Valid PingDTO ping) {

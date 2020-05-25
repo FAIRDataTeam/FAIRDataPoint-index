@@ -24,13 +24,16 @@ package solutions.fairdata.fdp.index.api.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Collections;
 
 @Configuration
 public class OpenApiConfig {
@@ -39,19 +42,21 @@ public class OpenApiConfig {
     BuildProperties buildProperties;
 
     @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
+    public OpenAPI customOpenAPI(@Value("${fdp-index.api.url:#{null}}") String serverUrl,
+                                 @Value("${fdp-index.api.title:#{null}}") String title,
+                                 @Value("${fdp-index.api.description:#{null}}") String description,
+                                 @Value("${fdp-index.api.contactUrl:#{null}}") String contactUrl,
+                                 @Value("${fdp-index.api.contactName:#{null}}") String contactName) {
+        String version = buildProperties.getVersion();
+        OpenAPI openAPI = new OpenAPI()
                 .components(new Components())
-                .info(
-                        new Info().title(
-                                "FAIR Data Point Index API"
-                        ).description(
-                                "This is OpenAPI documentation of FAIR Data Point Index REST API."
-                        ).version(
-                                buildProperties.getVersion()
-                        ).license(
-                                new License().name("MIT")
-                        )
-                );
+                .info(new Info().title(title).description(description).version(version));
+        if (contactUrl != null) {
+            openAPI.getInfo().contact(new Contact().url(contactUrl).name(contactName));
+        }
+        if (serverUrl != null) {
+            openAPI.servers(Collections.singletonList(new Server().url(serverUrl)));
+        }
+        return openAPI;
     }
 }
