@@ -22,7 +22,12 @@
  */
 package solutions.fairdata.fdp.index.storage;
 
+import com.github.mongobee.Mongobee;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
@@ -30,4 +35,19 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoAuditing
 @EnableMongoRepositories(basePackages = {"solutions.fairdata.fdp.index"})
 public class StorageConfig {
+
+    @Value("${spring.data.mongodb.uri}")
+    private String mongoUri;
+
+    @Autowired
+    private Environment environment;
+
+    @Bean
+    public Mongobee mongobee() throws Exception {
+        Mongobee runner = new Mongobee(mongoUri);
+        runner.setChangeLogsScanPackage("solutions.fairdata.fdp.index.storage.changelogs");
+        runner.setSpringEnvironment(environment);
+        runner.execute();
+        return runner;
+    }
 }
