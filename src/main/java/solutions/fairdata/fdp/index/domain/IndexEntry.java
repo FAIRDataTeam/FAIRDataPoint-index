@@ -22,14 +22,17 @@
  */
 package solutions.fairdata.fdp.index.domain;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@RedisHash("entries")
+@Document
 @Data
 public class IndexEntry {
-    @Id private String clientUrl;
+    @Id
+    protected ObjectId id;
+    private String clientUrl;
     private String registrationTime;
     private String modificationTime;
 }

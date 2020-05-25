@@ -5,11 +5,10 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
 
-  redis:
-    image: redis
-    container_name: redis
+  mongo:
+    image: mongo
     network_mode: service:index
-#    ports:
-#      - "127.0.0.1:6379:6379"
-#    volumes:
+    ports:
+      - "127.0.0.1:27017:27017"
+#   volumes:
 #      - ./redis-data:/data

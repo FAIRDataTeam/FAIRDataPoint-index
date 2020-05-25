@@ -22,25 +22,12 @@
  */
 package solutions.fairdata.fdp.index.storage;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
-@EnableRedisRepositories
+@EnableMongoAuditing
+@EnableMongoRepositories(basePackages = {"solutions.fairdata.fdp.index"})
 public class StorageConfig {
-    @Bean
-    public RedisConnectionFactory connectionFactory() {
-        return new LettuceConnectionFactory();
-    }
-    
-    @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        var template = new RedisTemplate<byte[], byte[]>();
-        template.setConnectionFactory(connectionFactory());
-        return template;
-    }
 }

@@ -15,7 +15,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="entry : ${entries}">
+        <tr th:each="entry : ${entries}" th:if="${entry != null}">
             <td class="endpoint">
                 <a th:href="${entry.clientUrl}" th:text="${entry.clientUrl}" target="_blank"></a>
             </td>

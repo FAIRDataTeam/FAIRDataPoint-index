@@ -22,8 +22,8 @@
  */
 package solutions.fairdata.fdp.index.storage;
 
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import solutions.fairdata.fdp.index.domain.IndexEntry;
 
-public interface EntryRepository extends PagingAndSortingRepository<IndexEntry, String> {
+public interface EntryRepository extends MongoRepository<IndexEntry, String> {
 }
