@@ -56,6 +56,10 @@ jobs:
           mvn --version
 
       # (3) -> Test and build
+      - name: Run tests
+        run: |
+          mvn --quiet -U -B org.jacoco:jacoco-maven-plugin:prepare-agent test
+
       - name: Build package and verify
         run: |
           mvn --quiet -B -U --fail-fast -DskipTests tidy:check com.github.spotbugs:spotbugs-maven-plugin:check license:check verify

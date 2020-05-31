@@ -20,6 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package solutions.fairdata.fdp.index;
 
-@javax.annotation.ParametersAreNonnullByDefault
-package solutions.fairdata.fdp.index.app;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication(scanBasePackages = {"solutions.fairdata.fdp.index"})
+public class FairDataPointIndexApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(FairDataPointIndexApplication.class, args);
+    }
+}

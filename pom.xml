@@ -87,7 +87,13 @@
             <artifactId>springdoc-openapi-data-rest</artifactId>
             <version>${springdoc.version}</version>
         </dependency>
-
+        <!-- testing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- plugins stuff -->
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>

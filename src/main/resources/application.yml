@@ -1,4 +1,3 @@
-
 spring:
   data:
     mongodb:
@@ -20,5 +19,3 @@ fdp-index:
     description: This is OpenAPI specification of FAIR Data Point Index REST API.
     contactUrl: https://github.com/FAIRDataTeam/FAIRDataPoint-index
     contactName: GitHub repository
-
-
