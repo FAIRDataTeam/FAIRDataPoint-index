@@ -18,6 +18,12 @@ jobs:
       JDK_FILE: openjdk-11.0.2_linux-x64_bin.tar.gz
       JDK_URL: https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
 
+    services:
+      mongo:
+        image: mongo:4.2
+        ports:
+          - 27017:27017
+
     steps:
       - uses: actions/checkout@v2
 
