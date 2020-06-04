@@ -43,6 +43,7 @@
         <!-- project settings -->
         <java.version>11</java.version>
         <license-plugin.version>3.0</license-plugin.version>
+        <mongobee.version>0.13</mongobee.version>
         <node.version>v12.16.3</node.version>
         <spotbugs.version>4.0.0</spotbugs.version>
         <springdoc.version>1.3.9</springdoc.version>
@@ -56,7 +57,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -70,6 +71,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.mongobee</groupId>
+            <artifactId>mongobee</artifactId>
+            <version>${mongobee.version}</version>
+        </dependency>
         <!-- springdoc -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -81,7 +87,13 @@
             <artifactId>springdoc-openapi-data-rest</artifactId>
             <version>${springdoc.version}</version>
         </dependency>
-
+        <!-- testing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- plugins stuff -->
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>

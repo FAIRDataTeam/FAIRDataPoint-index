@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "fdp-index.api.url",
+      "type": "java.lang.String",
+      "description": "Server URL where API is running"
+    },
+    {
+      "name": "fdp-index.api.title",
+      "type": "java.lang.String",
+      "description": "Title for OpenAPI docs"
+    },
+    {
+      "name": "fdp-index.api.description",
+      "type": "java.lang.String",
+      "description": "Description for OpenAPI docs"
+    },
+    {
+      "name": "fdp-index.api.contactUrl",
+      "type": "java.lang.String",
+      "description": "Contact URL for OpenAPI docs"
+    },
+    {
+      "name": "fdp-index.api.contactName",
+      "type": "java.lang.String",
+      "description": "Contact name/label for OpenAPI docs"
+    }
+  ]
+}

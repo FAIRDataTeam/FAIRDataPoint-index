@@ -20,37 +20,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.api.controller;
+package solutions.fairdata.fdp.index.fixtures;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
-import solutions.fairdata.fdp.index.service.IndexEntryService;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-@Tag(name = "Entries")
-@RestController
-@RequestMapping("/entries")
-public class EntriesController {
+public class IndexEntryFixtures {
 
-    @Autowired
-    private IndexEntryService service;
+    private static final String TIMESTAMP = "2020-01-01T00:00:00Z";
 
-    @GetMapping("")
-    public Page<IndexEntryDTO> getEntriesPage(Pageable pageable) {
-        return service.getEntriesPage(pageable).map(service::toDTO);
+    private static IndexEntry newIndexEntry(String clientUrl) {
+        IndexEntry indexEntry = new IndexEntry();
+        indexEntry.setClientUrl(clientUrl);
+        indexEntry.setModificationTime(TIMESTAMP);
+        indexEntry.setRegistrationTime(TIMESTAMP);
+        return indexEntry;
     }
 
-    @GetMapping("/all")
-    public List<IndexEntryDTO> getEntriesAll() {
-        return StreamSupport.stream(service.getAllEntries().spliterator(), true).map(service::toDTO).collect(Collectors.toList());
+    public static IndexEntry entryExample() {
+        return newIndexEntry("http://example.com");
+    }
+
+    public static List<IndexEntry> entriesFew() {
+        return Arrays.asList(
+                newIndexEntry("http://example.com"),
+                newIndexEntry("http://test.com"),
+                newIndexEntry("http://localhost")
+        );
+    }
+
+    public static List<IndexEntry> entriesN(int n) {
+        ArrayList<IndexEntry> entries = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            entries.add(newIndexEntry("http://example" + i + ".com"));
+        }
+        return entries;
     }
 }

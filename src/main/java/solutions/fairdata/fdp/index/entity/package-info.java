@@ -20,25 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.web.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import solutions.fairdata.fdp.index.service.IndexEntryService;
-
-@Controller
-@RequestMapping("/")
-public class HomeController {
-    @Autowired
-    private IndexEntryService service;
-
-    @GetMapping
-    public String home(Model model, Pageable pageable) {
-        model.addAttribute("entries", service.getEntriesPage(pageable));
-        return "home";
-    }
-}
+@javax.annotation.ParametersAreNonnullByDefault
+package solutions.fairdata.fdp.index.entity;

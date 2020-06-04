@@ -20,37 +20,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.api.controller;
+package solutions.fairdata.fdp.index.utils;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
-import solutions.fairdata.fdp.index.service.IndexEntryService;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-@Tag(name = "Entries")
-@RestController
-@RequestMapping("/entries")
-public class EntriesController {
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CustomPageImpl<T> {
 
-    @Autowired
-    private IndexEntryService service;
+    private int totalPages;
+    private long totalElements;
+    private boolean first;
+    private CustomSort sort;
+    private CustomPageable pageable;
+    private int number;
+    private int numberOfElements;
+    private boolean last;
+    private int size;
+    private List<T> content;
+    private boolean empty;
 
-    @GetMapping("")
-    public Page<IndexEntryDTO> getEntriesPage(Pageable pageable) {
-        return service.getEntriesPage(pageable).map(service::toDTO);
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class CustomPageable {
+        private int page;
+        private int size;
+        private CustomSort sort;
     }
 
-    @GetMapping("/all")
-    public List<IndexEntryDTO> getEntriesAll() {
-        return StreamSupport.stream(service.getAllEntries().spliterator(), true).map(service::toDTO).collect(Collectors.toList());
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class CustomSort {
+        private boolean sorted;
+        private boolean unsorted;
+        private boolean empty;
     }
+
 }

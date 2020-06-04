@@ -20,25 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.web.controller;
+package solutions.fairdata.fdp.index.database.changelogs;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import solutions.fairdata.fdp.index.service.IndexEntryService;
+import com.github.mongobee.changeset.ChangeLog;
+import com.github.mongobee.changeset.ChangeSet;
+import com.mongodb.client.MongoDatabase;
 
-@Controller
-@RequestMapping("/")
-public class HomeController {
-    @Autowired
-    private IndexEntryService service;
-
-    @GetMapping
-    public String home(Model model, Pageable pageable) {
-        model.addAttribute("entries", service.getEntriesPage(pageable));
-        return "home";
+@ChangeLog
+public class DatabaseChangeLog {
+    @ChangeSet(order = "000", id = "initMongoDB", author = "MarekSuchanek")
+    public void initMongoDB(MongoDatabase db) {
+        // Nothing to DO, just "first" making the version
     }
 }

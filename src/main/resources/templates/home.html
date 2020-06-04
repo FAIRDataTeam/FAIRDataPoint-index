@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://thymeleaf.org"
+      layout:decorate="~{layout}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      xmlns:th="http://thymeleaf.org">
 <head></head>
 <body>
 <section layout:fragment="content">
-    <table class="table table-striped entries">
+    <table class="table table-striped" id="entries">
         <thead>
         <tr>
             <th>Endpoint</th>
@@ -17,40 +17,46 @@
         <tbody>
         <tr th:each="entry : ${entries}">
             <td class="endpoint">
-                <a th:href="${entry.clientUrl}" th:text="${entry.clientUrl}" target="_blank"></a>
+                <a target="_blank" th:href="${entry.clientUrl}" th:text="${entry.clientUrl}"></a>
             </td>
-            <td th:text="${entry.registrationTime}" class="timestamp"></td>
-            <td th:text="${entry.modificationTime}" class="timestamp"></td>
+            <td class="timestamp" th:text="${entry.registrationTime}"></td>
+            <td class="timestamp" th:text="${entry.modificationTime}"></td>
         </tr>
         </tbody>
     </table>
     <hr/>
     <div>
         <div class="float-md-left">
-            <span th:text="${entries.totalElements}"></span> entries in total
+            <span id="totalEntries" th:text="${entries.totalElements}"></span> entries in total
         </div>
         <nav class="float-md-right">
-            <ul class="pagination" th:if="${entries.totalPages > 1}">
-                <li class="page-item" th:classAppend="${entries.number > 0 ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{'/'(page=1,size=${entries.size})}" th:if="${entries.number > 0}">&laquo;</a>
-                    <span class="page-link" th:if="${entries.number <= 0}">&laquo;</span>
+            <ul class="pagination">
+                <li class="page-item" id="firstPage" th:classAppend="${entries.number > 0 ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{'/'(page=1,size=${entries.size})}" th:if="${entries.number > 0}">&#171;</a>
+                    <span class="page-link" th:if="${entries.number <= 0}">&#171;</span>
                 </li>
-                <li class="page-item" th:classAppend="${entries.number > 0 ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{'/'(page=${entries.number},size=${entries.size})}" th:if="${entries.number > 0}">&lsaquo;</a>
-                    <span class="page-link" th:if="${entries.number <= 0}">&lsaquo;</span>
+                <li class="page-item" id="previousPage" th:classAppend="${entries.number > 0 ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{'/'(page=${entries.number},size=${entries.size})}"
+                       th:if="${entries.number > 0}">&#8249;</a>
+                    <span class="page-link" th:if="${entries.number <= 0}">&#8249;</span>
                 </li>
-                <li class="page-item disabled" aria-current="page">
+                <li aria-current="page" class="page-item disabled">
                       <span class="page-link">
-                          <span th:text="${entries.number + 1}"></span> / <span th:text="${entries.totalPages}"></span>
+                          <span id="currentPage" th:text="${entries.number + 1}"></span> / <span
+                              id="totalPages" th:text="${entries.totalPages == 0 ? 1 : entries.totalPages}"></span>
                       </span>
                 </li>
-                <li class="page-item" th:classAppend="${entries.number < (entries.totalPages - 1) ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{'/'(page=${entries.number + 2},size=${entries.size})}" th:if="${entries.number < (entries.totalPages - 1)}">&rsaquo;</a>
-                    <span class="page-link" th:if="${entries.number >= (entries.totalPages - 1)}">&rsaquo;</span>
+                <li class="page-item" id="nextPage"
+                    th:classAppend="${entries.number < (entries.totalPages - 1) ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{'/'(page=${entries.number + 2},size=${entries.size})}"
+                       th:if="${entries.number < (entries.totalPages - 1)}">&#8250;</a>
+                    <span class="page-link" th:if="${entries.number >= (entries.totalPages - 1)}">&#8250;</span>
                 </li>
-                <li class="page-item" th:classAppend="${entries.number < (entries.totalPages - 1) ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{'/'(page=${entries.totalPages},size=${entries.size})}" th:if="${entries.number < (entries.totalPages - 1)}">&raquo;</a>
-                    <span class="page-link" th:if="${entries.number >= (entries.totalPages - 1)}">&raquo;</span>
+                <li class="page-item" id="lastPage"
+                    th:classAppend="${entries.number < (entries.totalPages - 1) ? '' : 'disabled'}">
+                    <a class="page-link" th:href="@{'/'(page=${entries.totalPages},size=${entries.size})}"
+                       th:if="${entries.number < (entries.totalPages - 1)}">&#187;</a>
+                    <span class="page-link" th:if="${entries.number >= (entries.totalPages - 1)}">&#187;</span>
                 </li>
             </ul>
         </nav>

@@ -18,6 +18,12 @@ jobs:
       JDK_FILE: openjdk-11.0.2_linux-x64_bin.tar.gz
       JDK_URL: https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
 
+    services:
+      mongo:
+        image: mongo:4.2
+        ports:
+          - 27017:27017
+
     steps:
       - uses: actions/checkout@v2
 
@@ -56,6 +62,10 @@ jobs:
           mvn --version
 
       # (3) -> Test and build
+      - name: Run tests
+        run: |
+          mvn --quiet -U -B org.jacoco:jacoco-maven-plugin:prepare-agent test
+
       - name: Build package and verify
         run: |
           mvn --quiet -B -U --fail-fast -DskipTests tidy:check com.github.spotbugs:spotbugs-maven-plugin:check license:check verify

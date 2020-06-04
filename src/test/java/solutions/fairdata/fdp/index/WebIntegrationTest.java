@@ -20,37 +20,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.api.controller;
+package solutions.fairdata.fdp.index;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
-import solutions.fairdata.fdp.index.service.IndexEntryService;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-@Tag(name = "Entries")
-@RestController
-@RequestMapping("/entries")
-public class EntriesController {
+@ExtendWith(SpringExtension.class)
+@ActiveProfiles(Profiles.TESTING)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+        properties = {"spring.main.allow-bean-definition-overriding=true"})
+@AutoConfigureMockMvc
+public abstract class WebIntegrationTest {
 
     @Autowired
-    private IndexEntryService service;
+    protected MongoTemplate mongoTemplate;
 
-    @GetMapping("")
-    public Page<IndexEntryDTO> getEntriesPage(Pageable pageable) {
-        return service.getEntriesPage(pageable).map(service::toDTO);
-    }
+    @Autowired
+    protected MockMvc mvc;
 
-    @GetMapping("/all")
-    public List<IndexEntryDTO> getEntriesAll() {
-        return StreamSupport.stream(service.getAllEntries().spliterator(), true).map(service::toDTO).collect(Collectors.toList());
-    }
+    @Autowired
+    protected TestRestTemplate client;
 }

@@ -20,25 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.web.controller;
+package solutions.fairdata.fdp.index;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import solutions.fairdata.fdp.index.service.IndexEntryService;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@Controller
-@RequestMapping("/")
-public class HomeController {
-    @Autowired
-    private IndexEntryService service;
-
-    @GetMapping
-    public String home(Model model, Pageable pageable) {
-        model.addAttribute("entries", service.getEntriesPage(pageable));
-        return "home";
+@SpringBootApplication(scanBasePackages = {"solutions.fairdata.fdp.index"})
+public class FairDataPointIndexApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(FairDataPointIndexApplication.class, args);
     }
 }

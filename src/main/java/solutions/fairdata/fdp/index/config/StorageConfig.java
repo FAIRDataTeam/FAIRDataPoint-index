@@ -20,37 +20,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.api.controller;
+package solutions.fairdata.fdp.index.config;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.github.mongobee.Mongobee;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
-import solutions.fairdata.fdp.index.service.IndexEntryService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+@Configuration
+@EnableMongoAuditing
+@EnableMongoRepositories(basePackages = {"solutions.fairdata.fdp.index"})
+public class StorageConfig {
 
-@Tag(name = "Entries")
-@RestController
-@RequestMapping("/entries")
-public class EntriesController {
+    @Value("${spring.data.mongodb.uri}")
+    private String mongoUri;
 
     @Autowired
-    private IndexEntryService service;
+    private Environment environment;
 
-    @GetMapping("")
-    public Page<IndexEntryDTO> getEntriesPage(Pageable pageable) {
-        return service.getEntriesPage(pageable).map(service::toDTO);
-    }
-
-    @GetMapping("/all")
-    public List<IndexEntryDTO> getEntriesAll() {
-        return StreamSupport.stream(service.getAllEntries().spliterator(), true).map(service::toDTO).collect(Collectors.toList());
+    @Bean
+    public Mongobee mongobee() throws Exception {
+        Mongobee runner = new Mongobee(mongoUri);
+        runner.setChangeLogsScanPackage("solutions.fairdata.fdp.index.storage.changelogs");
+        runner.setSpringEnvironment(environment);
+        runner.execute();
+        return runner;
     }
 }
