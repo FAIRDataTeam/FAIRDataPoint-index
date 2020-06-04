@@ -24,6 +24,8 @@ package solutions.fairdata.fdp.index.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,8 +39,14 @@ public class HomeController {
     private IndexEntryService service;
 
     @GetMapping
-    public String home(Model model, Pageable pageable) {
+    public String home(Model model, @SortDefault(sort = "modificationTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        String sort = "";
+        if (!pageable.getSort().toList().isEmpty()) {
+            sort = pageable.getSort().toList().get(0).getProperty() + "," + pageable.getSort().toList().get(0).getDirection().name().toLowerCase();
+        }
+
         model.addAttribute("entries", service.getEntriesPage(pageable));
+        model.addAttribute("sort", sort);
         return "home";
     }
 }
