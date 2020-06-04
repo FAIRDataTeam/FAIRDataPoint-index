@@ -20,43 +20,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.api.config;
+package solutions.fairdata.fdp.index.config;
 
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.servers.Server;
+import com.github.mongobee.Mongobee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Collections;
+import org.springframework.core.env.Environment;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
-public class OpenApiConfig {
+@EnableMongoAuditing
+@EnableMongoRepositories(basePackages = {"solutions.fairdata.fdp.index"})
+public class StorageConfig {
+
+    @Value("${spring.data.mongodb.uri}")
+    private String mongoUri;
 
     @Autowired
-    BuildProperties buildProperties;
+    private Environment environment;
 
     @Bean
-    public OpenAPI customOpenAPI(@Value("${fdp-index.api.url:#{null}}") String serverUrl,
-                                 @Value("${fdp-index.api.title:#{null}}") String title,
-                                 @Value("${fdp-index.api.description:#{null}}") String description,
-                                 @Value("${fdp-index.api.contactUrl:#{null}}") String contactUrl,
-                                 @Value("${fdp-index.api.contactName:#{null}}") String contactName) {
-        String version = buildProperties.getVersion();
-        OpenAPI openAPI = new OpenAPI()
-                .components(new Components())
-                .info(new Info().title(title).description(description).version(version));
-        if (contactUrl != null) {
-            openAPI.getInfo().contact(new Contact().url(contactUrl).name(contactName));
-        }
-        if (serverUrl != null) {
-            openAPI.servers(Collections.singletonList(new Server().url(serverUrl)));
-        }
-        return openAPI;
+    public Mongobee mongobee() throws Exception {
+        Mongobee runner = new Mongobee(mongoUri);
+        runner.setChangeLogsScanPackage("solutions.fairdata.fdp.index.storage.changelogs");
+        runner.setSpringEnvironment(environment);
+        runner.execute();
+        return runner;
     }
 }

@@ -20,15 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.service;
+package solutions.fairdata.fdp.index.database.repository;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import solutions.fairdata.fdp.index.storage.StorageConfig;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
 
-@Configuration
-@ComponentScan
-@Import(StorageConfig.class)
-public class ServiceConfig {
+import java.util.Optional;
+
+public interface EntryRepository extends MongoRepository<IndexEntry, String> {
+    Optional<IndexEntry> findByClientUrl(String clientUrl);
 }

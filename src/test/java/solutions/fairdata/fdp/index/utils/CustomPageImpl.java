@@ -31,6 +31,18 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomPageImpl<T> {
 
+    private int totalPages;
+    private long totalElements;
+    private boolean first;
+    private CustomSort sort;
+    private CustomPageable pageable;
+    private int number;
+    private int numberOfElements;
+    private boolean last;
+    private int size;
+    private List<T> content;
+    private boolean empty;
+
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CustomPageable {
@@ -46,18 +58,5 @@ public class CustomPageImpl<T> {
         private boolean unsorted;
         private boolean empty;
     }
-
-
-    private int totalPages;
-    private long totalElements;
-    private boolean first;
-    private CustomSort sort;
-    private CustomPageable pageable;
-    private int number;
-    private int numberOfElements;
-    private boolean last;
-    private int size;
-    private List<T> content;
-    private boolean empty;
 
 }

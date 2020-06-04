@@ -31,18 +31,19 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.util.UriComponentsBuilder;
 import solutions.fairdata.fdp.index.WebIntegrationTest;
-import solutions.fairdata.fdp.index.domain.IndexEntry;
+import solutions.fairdata.fdp.index.database.repository.EntryRepository;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.fixtures.IndexEntryFixtures;
-import solutions.fairdata.fdp.index.storage.EntryRepository;
 
 import java.net.URI;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasValue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class Home_GET extends WebIntegrationTest {
+
+    @Autowired
+    private EntryRepository entryRepository;
 
     private URI url() {
         return URI.create("/");
@@ -54,9 +55,6 @@ public class Home_GET extends WebIntegrationTest {
                 .queryParam("size", size)
                 .build().toUri();
     }
-
-    @Autowired
-    private EntryRepository entryRepository;
 
     @Test
     @DisplayName("HTTP 200: empty table")
@@ -180,8 +178,8 @@ public class Home_GET extends WebIntegrationTest {
                 .andExpect(view().name("home"))
                 .andExpect(xpath("//table[@id='entries']/thead/tr").exists())
                 .andExpect(xpath("//table[@id='entries']/tbody/tr").nodeCount(33))
-                .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get((page-1)*size).getClientUrl()))
-                .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string(entries.get((page-1)*size).getClientUrl()))
+                .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get((page - 1) * size).getClientUrl()))
+                .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string(entries.get((page - 1) * size).getClientUrl()))
                 .andExpect(xpath("//span[@id='totalEntries']").string(String.valueOf(items)))
                 .andExpect(xpath("//span[@id='currentPage']").string(String.valueOf(page)))
                 .andExpect(xpath("//span[@id='totalPages']").string(String.valueOf(page)))
@@ -216,8 +214,8 @@ public class Home_GET extends WebIntegrationTest {
                 .andExpect(view().name("home"))
                 .andExpect(xpath("//table[@id='entries']/thead/tr").exists())
                 .andExpect(xpath("//table[@id='entries']/tbody/tr").nodeCount(size))
-                .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get((page-1)*size).getClientUrl()))
-                .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string(entries.get((page-1)*size).getClientUrl()))
+                .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get((page - 1) * size).getClientUrl()))
+                .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string(entries.get((page - 1) * size).getClientUrl()))
                 .andExpect(xpath("//span[@id='totalEntries']").string(String.valueOf(items)))
                 .andExpect(xpath("//span[@id='currentPage']").string(String.valueOf(page)))
                 .andExpect(xpath("//span[@id='totalPages']").string(String.valueOf(7)))

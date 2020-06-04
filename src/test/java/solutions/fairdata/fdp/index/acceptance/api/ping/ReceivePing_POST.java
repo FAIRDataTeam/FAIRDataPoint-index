@@ -33,9 +33,9 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import solutions.fairdata.fdp.index.WebIntegrationTest;
 import solutions.fairdata.fdp.index.api.dto.PingDTO;
-import solutions.fairdata.fdp.index.domain.IndexEntry;
+import solutions.fairdata.fdp.index.database.repository.EntryRepository;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.fixtures.IndexEntryFixtures;
-import solutions.fairdata.fdp.index.storage.EntryRepository;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -46,6 +46,11 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 public class ReceivePing_POST extends WebIntegrationTest {
 
+    @Autowired
+    private EntryRepository entryRepository;
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
     private URI url() {
         return URI.create("/");
     }
@@ -55,12 +60,6 @@ public class ReceivePing_POST extends WebIntegrationTest {
         dto.setClientUrl(clientUrl);
         return dto;
     }
-
-    @Autowired
-    private EntryRepository entryRepository;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
     @Test
     @DisplayName("HTTP 204: new entry")

@@ -22,11 +22,11 @@
  */
 package solutions.fairdata.fdp.index.api.dto;
 
-import javax.validation.constraints.NotNull;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.hibernate.validator.constraints.URL;
 import lombok.Data;
+import org.hibernate.validator.constraints.URL;
+
+import javax.validation.constraints.NotNull;
 
 @Data
 @Schema(name = "Ping")

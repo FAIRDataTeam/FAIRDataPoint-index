@@ -32,10 +32,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import solutions.fairdata.fdp.index.WebIntegrationTest;
-import solutions.fairdata.fdp.index.api.dto.EntryDTO;
-import solutions.fairdata.fdp.index.domain.IndexEntry;
+import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
+import solutions.fairdata.fdp.index.database.repository.EntryRepository;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.fixtures.IndexEntryFixtures;
-import solutions.fairdata.fdp.index.storage.EntryRepository;
 
 import java.net.URI;
 import java.util.List;
@@ -47,15 +47,14 @@ import static org.hamcrest.core.IsNull.notNullValue;
 
 public class EntriesAll_GET extends WebIntegrationTest {
 
+    @Autowired
+    private EntryRepository entryRepository;
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
     private URI url() {
         return URI.create("/entries/all");
     }
-
-    @Autowired
-    private EntryRepository entryRepository;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
     @Test
     @DisplayName("HTTP 200: list empty")
@@ -68,11 +67,11 @@ public class EntriesAll_GET extends WebIntegrationTest {
                 .get(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<List<EntryDTO>> responseType = new ParameterizedTypeReference<>() {
+        ParameterizedTypeReference<List<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
         };
 
         // WHEN
-        ResponseEntity<List<EntryDTO>> result = client.exchange(request, responseType);
+        ResponseEntity<List<IndexEntryDTO>> result = client.exchange(request, responseType);
 
         // THEN
         assertThat("Correct response code is received", result.getStatusCode(), is(equalTo(HttpStatus.OK)));
@@ -93,11 +92,11 @@ public class EntriesAll_GET extends WebIntegrationTest {
                 .get(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<List<EntryDTO>> responseType = new ParameterizedTypeReference<>() {
+        ParameterizedTypeReference<List<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
         };
 
         // WHEN
-        ResponseEntity<List<EntryDTO>> result = client.exchange(request, responseType);
+        ResponseEntity<List<IndexEntryDTO>> result = client.exchange(request, responseType);
 
         // THEN
         assertThat("Correct response code is received", result.getStatusCode(), is(equalTo(HttpStatus.OK)));
@@ -121,11 +120,11 @@ public class EntriesAll_GET extends WebIntegrationTest {
                 .get(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<List<EntryDTO>> responseType = new ParameterizedTypeReference<>() {
+        ParameterizedTypeReference<List<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
         };
 
         // WHEN
-        ResponseEntity<List<EntryDTO>> result = client.exchange(request, responseType);
+        ResponseEntity<List<IndexEntryDTO>> result = client.exchange(request, responseType);
 
         // THEN
         assertThat("Correct response code is received", result.getStatusCode(), is(equalTo(HttpStatus.OK)));

@@ -20,19 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.domain;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
-@Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    private String clientUrl;
-    private String registrationTime;
-    private String modificationTime;
-}
+@javax.annotation.ParametersAreNonnullByDefault
+package solutions.fairdata.fdp.index.entity;

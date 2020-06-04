@@ -22,28 +22,29 @@
  */
 package solutions.fairdata.fdp.index.service;
 
-import java.time.OffsetDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import solutions.fairdata.fdp.index.api.dto.EntryDTO;
-import solutions.fairdata.fdp.index.domain.IndexEntry;
-import solutions.fairdata.fdp.index.storage.EntryRepository;
+import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
+import solutions.fairdata.fdp.index.database.repository.EntryRepository;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
+
+import java.time.OffsetDateTime;
 
 @Component
-public class IndexService {
-    private static final Logger logger = LoggerFactory.getLogger(IndexService.class);
-    
+public class IndexEntryService {
+    private static final Logger logger = LoggerFactory.getLogger(IndexEntryService.class);
+
     @Autowired
     private EntryRepository repository;
-    
+
     public void storeEntry(String clientUrl) {
         var entity = repository.findByClientUrl(clientUrl);
         var now = OffsetDateTime.now();
-        
+
         final IndexEntry entry;
         if (entity.isPresent()) {
             logger.info("Updating timestamp of existing entry {}", clientUrl);
@@ -54,11 +55,11 @@ public class IndexService {
             entry.setClientUrl(clientUrl);
             entry.setRegistrationTime(now.toString());
         }
-        
+
         entry.setModificationTime(now.toString());
         repository.save(entry);
     }
-    
+
     public Iterable<IndexEntry> getAllEntries() {
         return repository.findAll();
     }
@@ -67,8 +68,8 @@ public class IndexService {
         return repository.findAll(pageable);
     }
 
-    public EntryDTO toDTO(IndexEntry indexEntry) {
-        EntryDTO dto = new EntryDTO();
+    public IndexEntryDTO toDTO(IndexEntry indexEntry) {
+        IndexEntryDTO dto = new IndexEntryDTO();
         dto.setClientUrl(indexEntry.getClientUrl());
         dto.setRegistrationTime(OffsetDateTime.parse(indexEntry.getRegistrationTime()));
         dto.setModificationTime(OffsetDateTime.parse(indexEntry.getModificationTime()));

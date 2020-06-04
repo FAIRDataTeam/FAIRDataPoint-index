@@ -14,7 +14,7 @@ spring:
 
 fdp-index:
   api:
-#    url:
+    #    url:
     title: FAIR Data Point Index API
     description: This is OpenAPI specification of FAIR Data Point Index REST API.
     contactUrl: https://github.com/FAIRDataTeam/FAIRDataPoint-index

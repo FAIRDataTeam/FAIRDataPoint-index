@@ -1,21 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html lang="en"
-      xmlns:th="http://thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-    <head>
-        <title>FAIR Data Point index</title>
-        <link th:href="@{/css/site.css}" rel="stylesheet" />
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://thymeleaf.org">
+<head>
+    <title>FAIR Data Point index</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}"/>
 
-        <script th:src="@{/js/jquery/jquery.slim.min.js}" ></script>
-        <script th:src="@{/js/bootstrap/bootstrap.min.js}" ></script>
-    </head>
-    <body>
-        <main>
-            <header th:replace="fragments/header :: header"></header>
+    <script th:src="@{/js/jquery/jquery.slim.min.js}"></script>
+    <script th:src="@{/js/bootstrap/bootstrap.min.js}"></script>
+</head>
+<body>
+<main>
+    <header th:replace="fragments/header :: header"></header>
 
-            <section id="content" class="container" layout:fragment="content"></section>
+    <section class="container" id="content" layout:fragment="content"></section>
 
-            <footer th:replace="fragments/footer :: footer"></footer>
-        </main>
-    </body>
+    <footer th:replace="fragments/footer :: footer"></footer>
+</main>
+</body>
 </html>

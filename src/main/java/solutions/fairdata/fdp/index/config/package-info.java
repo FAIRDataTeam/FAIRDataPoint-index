@@ -20,16 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.storage.changelogs;
 
-import com.github.mongobee.changeset.ChangeLog;
-import com.github.mongobee.changeset.ChangeSet;
-import com.mongodb.client.MongoDatabase;
-
-@ChangeLog
-public class DatabaseChangeLog {
-    @ChangeSet(order = "000", id = "initMongoDB", author = "MarekSuchanek")
-    public void initMongoDB(MongoDatabase db){
-        // Nothing to DO, just "first" making the version
-    }
-}
+@javax.annotation.ParametersAreNonnullByDefault
+package solutions.fairdata.fdp.index.config;

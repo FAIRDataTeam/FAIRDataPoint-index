@@ -22,37 +22,33 @@
  */
 package solutions.fairdata.fdp.index.api.controller;
 
-import javax.validation.Valid;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import solutions.fairdata.fdp.index.service.IndexService;
+import org.springframework.web.bind.annotation.*;
 import solutions.fairdata.fdp.index.api.dto.PingDTO;
+import solutions.fairdata.fdp.index.service.IndexEntryService;
+
+import javax.validation.Valid;
 
 @Tag(name = "Ping")
 @RestController
 @RequestMapping("/")
 public class PingController {
     private static final Logger logger = LoggerFactory.getLogger(PingController.class);
-    
+
     @Autowired
-    private IndexService service;
+    private IndexEntryService service;
 
     @Operation(hidden = true)
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void receivePing(@RequestBody @Valid PingDTO ping) {
         logger.info("Received ping from {}", ping);
-        
+
         service.storeEntry(ping.getClientUrl());
     }
 }

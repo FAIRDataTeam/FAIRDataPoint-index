@@ -20,16 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.web;
+package solutions.fairdata.fdp.index.config;
 
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import solutions.fairdata.fdp.index.service.ServiceConfig;
 
 @Configuration
-@ComponentScan
-@Import(ServiceConfig.class)
 public class WebConfig implements WebMvcConfigurer {
 }

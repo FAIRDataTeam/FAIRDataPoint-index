@@ -32,10 +32,10 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 import solutions.fairdata.fdp.index.WebIntegrationTest;
-import solutions.fairdata.fdp.index.api.dto.EntryDTO;
-import solutions.fairdata.fdp.index.domain.IndexEntry;
+import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
+import solutions.fairdata.fdp.index.database.repository.EntryRepository;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.fixtures.IndexEntryFixtures;
-import solutions.fairdata.fdp.index.storage.EntryRepository;
 import solutions.fairdata.fdp.index.utils.CustomPageImpl;
 
 import java.net.URI;
@@ -80,11 +80,11 @@ public class EntriesPage_GET extends WebIntegrationTest {
                 .get(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<CustomPageImpl<EntryDTO>> responseType = new ParameterizedTypeReference<>() {
+        ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
         };
 
         // WHEN
-        ResponseEntity<CustomPageImpl<EntryDTO>> result = client.exchange(request, responseType);
+        ResponseEntity<CustomPageImpl<IndexEntryDTO>> result = client.exchange(request, responseType);
 
         // THEN
         assertThat("Correct response code is received", result.getStatusCode(), is(equalTo(HttpStatus.OK)));
@@ -108,11 +108,11 @@ public class EntriesPage_GET extends WebIntegrationTest {
                 .get(urlWithPage(7))
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<CustomPageImpl<EntryDTO>> responseType = new ParameterizedTypeReference<>() {
+        ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
         };
 
         // WHEN
-        ResponseEntity<CustomPageImpl<EntryDTO>> result = client.exchange(request, responseType);
+        ResponseEntity<CustomPageImpl<IndexEntryDTO>> result = client.exchange(request, responseType);
 
         // THEN
         assertThat("Correct response code is received", result.getStatusCode(), is(equalTo(HttpStatus.OK)));
@@ -138,11 +138,11 @@ public class EntriesPage_GET extends WebIntegrationTest {
                 .get(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<CustomPageImpl<EntryDTO>> responseType = new ParameterizedTypeReference<>() {
+        ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
         };
 
         // WHEN
-        ResponseEntity<CustomPageImpl<EntryDTO>> result = client.exchange(request, responseType);
+        ResponseEntity<CustomPageImpl<IndexEntryDTO>> result = client.exchange(request, responseType);
 
         // THEN
         assertThat("Correct response code is received", result.getStatusCode(), is(equalTo(HttpStatus.OK)));
@@ -174,11 +174,11 @@ public class EntriesPage_GET extends WebIntegrationTest {
                 .get(urlWithPageSize(page, size))
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<CustomPageImpl<EntryDTO>> responseType = new ParameterizedTypeReference<>() {
+        ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
         };
 
         // WHEN
-        ResponseEntity<CustomPageImpl<EntryDTO>> result = client.exchange(request, responseType);
+        ResponseEntity<CustomPageImpl<IndexEntryDTO>> result = client.exchange(request, responseType);
 
         // THEN
         assertThat("Correct response code is received", result.getStatusCode(), is(equalTo(HttpStatus.OK)));
@@ -208,11 +208,11 @@ public class EntriesPage_GET extends WebIntegrationTest {
                 .get(urlWithPageSize(page, size))
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<CustomPageImpl<EntryDTO>> responseType = new ParameterizedTypeReference<>() {
+        ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
         };
 
         // WHEN
-        ResponseEntity<CustomPageImpl<EntryDTO>> result = client.exchange(request, responseType);
+        ResponseEntity<CustomPageImpl<IndexEntryDTO>> result = client.exchange(request, responseType);
 
         // THEN
         assertThat("Correct response code is received", result.getStatusCode(), is(equalTo(HttpStatus.OK)));

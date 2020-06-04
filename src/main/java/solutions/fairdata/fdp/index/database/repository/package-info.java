@@ -20,13 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.storage;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import solutions.fairdata.fdp.index.domain.IndexEntry;
-
-import java.util.Optional;
-
-public interface EntryRepository extends MongoRepository<IndexEntry, String> {
-    Optional<IndexEntry> findByClientUrl(String clientUrl);
-}
+@javax.annotation.ParametersAreNonnullByDefault
+package solutions.fairdata.fdp.index.database.repository;

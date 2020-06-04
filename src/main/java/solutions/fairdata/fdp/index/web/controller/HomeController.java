@@ -28,14 +28,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import solutions.fairdata.fdp.index.service.IndexService;
+import solutions.fairdata.fdp.index.service.IndexEntryService;
 
 @Controller
 @RequestMapping("/")
 public class HomeController {
     @Autowired
-    private IndexService service;
-    
+    private IndexEntryService service;
+
     @GetMapping
     public String home(Model model, Pageable pageable) {
         model.addAttribute("entries", service.getEntriesPage(pageable));

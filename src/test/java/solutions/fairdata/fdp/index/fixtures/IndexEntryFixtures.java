@@ -22,7 +22,7 @@
  */
 package solutions.fairdata.fdp.index.fixtures;
 
-import solutions.fairdata.fdp.index.domain.IndexEntry;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
