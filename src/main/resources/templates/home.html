@@ -37,7 +37,7 @@
         </tbody>
     </table>
     <hr/>
-    <div>
+    <div class="clearfix">
         <div class="float-md-left">
             <span id="totalEntries" th:text="${entries.totalElements}"></span> entries in total
         </div>
@@ -72,6 +72,32 @@
                 </li>
             </ul>
         </nav>
+    </div>
+    <div class="clearfix">
+        <div class="float-md-right">
+            <form th:action="@{'/'}" method="get" class="row mx-auto">
+                <div class="col-sm">
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="size" name="size" min="1" th:value="${entries.size}">
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="size">per page</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="page" name="page" min="1" th:max="${entries.totalPages}" th:value="${entries.number + 1}">
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="page">page</label>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <input type="hidden" name="sort" th:value="${sort}">
+                    <button type="submit" class="btn btn-primary">Go</button>
+                </div>
+            </form>
+        </div>
     </div>
     <script src="../static/js/localize-timestamps.js" th:src="@{/js/localize-timestamps.js}"></script>
 </section>
