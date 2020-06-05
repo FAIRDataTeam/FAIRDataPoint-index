@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import solutions.fairdata.fdp.index.service.IndexEntryService;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/")
 public class HomeController {
@@ -40,10 +42,8 @@ public class HomeController {
 
     @GetMapping
     public String home(Model model, @SortDefault(sort = "modificationTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        String sort = "";
-        if (!pageable.getSort().toList().isEmpty()) {
-            sort = pageable.getSort().toList().get(0).getProperty() + "," + pageable.getSort().toList().get(0).getDirection().name().toLowerCase();
-        }
+        Optional<Sort.Order> order = pageable.getSort().stream().findFirst();
+        String sort = order.map(o -> o.getProperty() + "," + o.getDirection().name().toLowerCase()).orElse("");
 
         model.addAttribute("entries", service.getEntriesPage(pageable));
         model.addAttribute("sort", sort);
