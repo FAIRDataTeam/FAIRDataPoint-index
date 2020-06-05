@@ -24,7 +24,6 @@ package solutions.fairdata.fdp.index;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication(scanBasePackages = {"solutions.fairdata.fdp.index"})
 public class FairDataPointIndexApplication {
