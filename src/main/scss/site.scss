@@ -59,3 +59,17 @@ table.entries td.timestamp,
 table.entries th.right {
   text-align: right;
 }
+
+a.sort-link:hover {
+  text-decoration: none;
+}
+
+a.sort-link {
+  color: $secondary;
+  text-decoration: none;
+}
+
+a.sort-link.active {
+  color: $primary;
+  text-decoration: none;
+}
