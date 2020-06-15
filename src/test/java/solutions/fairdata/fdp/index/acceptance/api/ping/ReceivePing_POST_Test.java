@@ -44,12 +44,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-public class ReceivePing_POST extends WebIntegrationTest {
+@DisplayName("POST /ping")
+public class ReceivePing_POST_Test extends WebIntegrationTest {
 
     @Autowired
     private EntryRepository entryRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    private final ParameterizedTypeReference<Void> responseType = new ParameterizedTypeReference<>() {};
 
     private URI url() {
         return URI.create("/");
@@ -74,8 +77,6 @@ public class ReceivePing_POST extends WebIntegrationTest {
                 .post(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .body(reqDto);
-        ParameterizedTypeReference<Void> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         assertThat("Entry does not exist before the ping", entryRepository.findByClientUrl(clientUrl).isPresent(), is(Boolean.FALSE));
@@ -100,8 +101,6 @@ public class ReceivePing_POST extends WebIntegrationTest {
                 .post(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .body(reqDto);
-        ParameterizedTypeReference<Void> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         entryRepository.save(indexEntry);
@@ -124,8 +123,6 @@ public class ReceivePing_POST extends WebIntegrationTest {
                 .post(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .body(reqDto);
-        ParameterizedTypeReference<Void> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         ResponseEntity<Void> result = client.exchange(request, responseType);
@@ -145,8 +142,6 @@ public class ReceivePing_POST extends WebIntegrationTest {
                 .post(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .body(reqDto);
-        ParameterizedTypeReference<Void> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         ResponseEntity<Void> result = client.exchange(request, responseType);
@@ -167,8 +162,6 @@ public class ReceivePing_POST extends WebIntegrationTest {
                 .post(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .body(dummyData);
-        ParameterizedTypeReference<Void> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         ResponseEntity<Void> result = client.exchange(request, responseType);

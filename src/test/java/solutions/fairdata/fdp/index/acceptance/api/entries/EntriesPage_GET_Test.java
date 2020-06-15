@@ -25,6 +25,7 @@ package solutions.fairdata.fdp.index.acceptance.api.entries;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,11 +47,13 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-
-public class EntriesPage_GET extends WebIntegrationTest {
+@DisplayName("GET /entries")
+public class EntriesPage_GET_Test extends WebIntegrationTest {
 
     @Autowired
     private EntryRepository entryRepository;
+
+    private final ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {};
 
     private URI url() {
         return URI.create("/entries");
@@ -80,8 +83,6 @@ public class EntriesPage_GET extends WebIntegrationTest {
                 .get(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         ResponseEntity<CustomPageImpl<IndexEntryDTO>> result = client.exchange(request, responseType);
@@ -108,8 +109,6 @@ public class EntriesPage_GET extends WebIntegrationTest {
                 .get(urlWithPage(7))
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         ResponseEntity<CustomPageImpl<IndexEntryDTO>> result = client.exchange(request, responseType);
@@ -138,8 +137,6 @@ public class EntriesPage_GET extends WebIntegrationTest {
                 .get(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         ResponseEntity<CustomPageImpl<IndexEntryDTO>> result = client.exchange(request, responseType);
@@ -174,8 +171,6 @@ public class EntriesPage_GET extends WebIntegrationTest {
                 .get(urlWithPageSize(page, size))
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         ResponseEntity<CustomPageImpl<IndexEntryDTO>> result = client.exchange(request, responseType);
@@ -208,8 +203,6 @@ public class EntriesPage_GET extends WebIntegrationTest {
                 .get(urlWithPageSize(page, size))
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         ResponseEntity<CustomPageImpl<IndexEntryDTO>> result = client.exchange(request, responseType);

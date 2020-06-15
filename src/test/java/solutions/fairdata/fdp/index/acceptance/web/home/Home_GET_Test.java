@@ -40,7 +40,8 @@ import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class Home_GET extends WebIntegrationTest {
+@DisplayName("Browse /")
+public class Home_GET_Test extends WebIntegrationTest {
 
     @Autowired
     private EntryRepository entryRepository;
