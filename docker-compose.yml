@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  index:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:27017:27017"
+#   volumes:
+#     - ./application.yml:/app/application.yml
+  mongo:
+    image: mongo
+    network_mode: service:index
+#   volumes:
+#      - ./mongo-data:/data/db

@@ -1,0 +1,21 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/fdp-index
+    web:
+      pageable:
+        size-parameter: size
+        page-parameter: page
+        default-page-size: 50
+        one-indexed-parameters: true
+        max-page-size: 2000
+        prefix:
+        qualifier-delimiter: _
+
+fdp-index:
+  api:
+    #    url:
+    title: FAIR Data Point Index API
+    description: This is OpenAPI specification of FAIR Data Point Index REST API.
+    contactUrl: https://github.com/FAIRDataTeam/FAIRDataPoint-index
+    contactName: GitHub repository

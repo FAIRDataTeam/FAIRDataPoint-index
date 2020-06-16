@@ -1,0 +1,25 @@
+{
+  "name": "FAIRDataPoint-index",
+  "version": "0.1.0-SNAPSHOT",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "scss": "node-sass src/main/scss -o target/classes/static/css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FAIRDataTeam/FAIRDataPoint-index.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FAIRDataTeam/FAIRDataPoint-index/issues"
+  },
+  "homepage": "https://github.com/FAIRDataTeam/FAIRDataPoint-index",
+  "dependencies": {
+    "bootstrap": "^4.5.0",
+    "copyfiles": "^2.1.0",
+    "jquery": "^3.5.1",
+    "node-sass": "4.14.1"
+  }
+}
