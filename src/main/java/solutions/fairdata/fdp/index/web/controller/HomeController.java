@@ -42,8 +42,10 @@ public class HomeController {
 
     @GetMapping
     public String home(Model model, @SortDefault(sort = "modificationTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        Optional<Sort.Order> order = pageable.getSort().stream().findFirst();
-        String sort = order.map(o -> o.getProperty() + "," + o.getDirection().name().toLowerCase()).orElse("");
+        var sort = pageable.getSort().stream()
+            .findFirst()
+            .map(o -> o.getProperty() + "," + o.getDirection().name().toLowerCase())
+            .orElse("");
 
         model.addAttribute("entries", service.getEntriesPage(pageable));
         model.addAttribute("sort", sort);

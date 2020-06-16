@@ -15,8 +15,6 @@ jobs:
       TAG_DEVELOP: develop
       TAG_LATEST: latest
       JDK_VERSION: 11
-      JDK_FILE: openjdk-11.0.2_linux-x64_bin.tar.gz
-      JDK_URL: https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz
 
     services:
       mongo:
@@ -37,25 +35,13 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 
-      - name: Cache JDK folder
-        uses: actions/cache@v1
-        with:
-          path: ~/jdk
-          key: ${{ env.JDK_FILE }}
-
       # (2) -> Prepare Java
-      - name: Download Oracle JDK
-        run: |
-          if [ ! -f ~/jdk/$JDK_FILE ]; then
-            wget --quiet $JDK_URL -O ~/jdk/$JDK_FILE
-          fi
-          cp ~/jdk/$JDK_FILE .
-
       - name: Setup Java
-        uses: actions/setup-java@master
+        uses: actions/setup-java@v1
         with:
-          version: ${{ env.JDK_VERSION }}
-          jdkFile: ${{ env.JDK_FILE }}
+          java-version: ${{ env.JDK_VERSION }}
+          java-package: jdk
+          architecture: x64
 
       - name: Verify Maven and Java
         run: |
@@ -64,11 +50,11 @@ jobs:
       # (3) -> Test and build
       - name: Run tests
         run: |
-          mvn --quiet -U -B org.jacoco:jacoco-maven-plugin:prepare-agent test
+          mvn -U -B org.jacoco:jacoco-maven-plugin:prepare-agent test
 
       - name: Build package and verify
         run: |
-          mvn --quiet -B -U --fail-fast -DskipTests tidy:check com.github.spotbugs:spotbugs-maven-plugin:check license:check verify
+          mvn -U -B --fail-fast -DskipTests tidy:check com.github.spotbugs:spotbugs-maven-plugin:check license:check verify
 
       # (4) -> Build Docker image
       - name: Docker build

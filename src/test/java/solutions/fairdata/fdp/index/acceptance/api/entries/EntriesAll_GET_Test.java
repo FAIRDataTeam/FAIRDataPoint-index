@@ -45,12 +45,15 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-public class EntriesAll_GET extends WebIntegrationTest {
+@DisplayName("GET /entries/all")
+public class EntriesAll_GET_Test extends WebIntegrationTest {
 
     @Autowired
     private EntryRepository entryRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    private final ParameterizedTypeReference<List<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {};
 
     private URI url() {
         return URI.create("/entries/all");
@@ -67,8 +70,6 @@ public class EntriesAll_GET extends WebIntegrationTest {
                 .get(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<List<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         ResponseEntity<List<IndexEntryDTO>> result = client.exchange(request, responseType);
@@ -92,8 +93,6 @@ public class EntriesAll_GET extends WebIntegrationTest {
                 .get(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<List<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         ResponseEntity<List<IndexEntryDTO>> result = client.exchange(request, responseType);
@@ -120,8 +119,6 @@ public class EntriesAll_GET extends WebIntegrationTest {
                 .get(url())
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
-        ParameterizedTypeReference<List<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {
-        };
 
         // WHEN
         ResponseEntity<List<IndexEntryDTO>> result = client.exchange(request, responseType);

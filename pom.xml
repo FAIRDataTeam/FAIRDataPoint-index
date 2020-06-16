@@ -29,13 +29,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.5.RELEASE</version>
+        <version>2.2.7.RELEASE</version>
         <relativePath/>
     </parent>
 
     <groupId>solutions.fairdata</groupId>
     <artifactId>fairdatapoint-index</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 
     <inceptionYear>2020</inceptionYear>
 
