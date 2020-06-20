@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1]
+
+### Fixed
+
+- Serving static files for the web index page correctly
+
 ## [0.1.0]
 
 Initial version for simple list of FAIR Data Points.
@@ -17,5 +23,6 @@ Initial version for simple list of FAIR Data Points.
 - REST API to retrieve entries list (both all and paged) documented using Swagger/OpenAPI
 - Simple webpage with table to browse entries including sorting and pagination
 
-[Unreleased]: /../../compare/v0.1.0...develop
+[Unreleased]: /../../compare/v0.1.1...develop
 [0.1.0]: /../../tree/v0.1.0
+[0.1.1]: /../../tree/v0.1.1
