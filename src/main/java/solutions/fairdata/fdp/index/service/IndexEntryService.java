@@ -28,22 +28,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
-import solutions.fairdata.fdp.index.database.repository.EntryRepository;
+import solutions.fairdata.fdp.index.api.dto.PingDTO;
+import solutions.fairdata.fdp.index.database.repository.IndexEntryRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
 
-import java.time.OffsetDateTime;
+import javax.validation.Valid;
+import java.time.Instant;
 
-@Component
+@Service
+@Validated
 public class IndexEntryService {
     private static final Logger logger = LoggerFactory.getLogger(IndexEntryService.class);
 
     @Autowired
-    private EntryRepository repository;
+    private IndexEntryRepository repository;
 
-    public void storeEntry(String clientUrl) {
+    public IndexEntry storeEntry(@Valid PingDTO pingDTO) {
+        var clientUrl = pingDTO.getClientUrl();
         var entity = repository.findByClientUrl(clientUrl);
-        var now = OffsetDateTime.now();
+        var now = Instant.now();
 
         final IndexEntry entry;
         if (entity.isPresent()) {
@@ -53,11 +59,11 @@ public class IndexEntryService {
             logger.info("Storing new entry {}", clientUrl);
             entry = new IndexEntry();
             entry.setClientUrl(clientUrl);
-            entry.setRegistrationTime(now.toString());
+            entry.setRegistrationTime(now);
         }
 
-        entry.setModificationTime(now.toString());
-        repository.save(entry);
+        entry.setModificationTime(now);
+        return repository.save(entry);
     }
 
     public Iterable<IndexEntry> getAllEntries() {
@@ -71,8 +77,8 @@ public class IndexEntryService {
     public IndexEntryDTO toDTO(IndexEntry indexEntry) {
         IndexEntryDTO dto = new IndexEntryDTO();
         dto.setClientUrl(indexEntry.getClientUrl());
-        dto.setRegistrationTime(OffsetDateTime.parse(indexEntry.getRegistrationTime()));
-        dto.setModificationTime(OffsetDateTime.parse(indexEntry.getModificationTime()));
+        dto.setRegistrationTime(indexEntry.getRegistrationTime().toString());
+        dto.setModificationTime(indexEntry.getModificationTime().toString());
         return dto;
     }
 }

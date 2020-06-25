@@ -20,29 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity;
+package solutions.fairdata.fdp.index.utils;
 
-import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpEntity;
+import solutions.fairdata.fdp.index.entity.events.Event;
+import solutions.fairdata.fdp.index.entity.events.EventType;
+import solutions.fairdata.fdp.index.entity.events.IncomingPing;
+import solutions.fairdata.fdp.index.entity.http.Exchange;
+import solutions.fairdata.fdp.index.entity.http.ExchangeDirection;
 
-import java.time.Instant;
+import javax.servlet.http.HttpServletRequest;
 
-@Document
-@Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    @Indexed(unique=true)
-    private String clientUrl;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant registrationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant modificationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant lastRetrievalTime;
-    private RepositoryMetadata currentMetadata;
+public class IncomingPingUtils {
+
+    private static final Integer VERSION = 1;
+
+    public static Event prepareEvent(HttpEntity<String> httpEntity, HttpServletRequest request) {
+        var incomingPing = new IncomingPing();
+        var ex = new Exchange(ExchangeDirection.INCOMING, request.getRemoteAddr());
+        incomingPing.setExchange(ex);
+        ex.getRequest().setFromHttpEntity(httpEntity);
+        ex.getRequest().setFromHttpServletRequest(request);
+        return new Event(VERSION, incomingPing);
+    }
 }

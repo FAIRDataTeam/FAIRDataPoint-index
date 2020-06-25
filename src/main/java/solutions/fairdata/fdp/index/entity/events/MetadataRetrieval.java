@@ -20,13 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.database.repository;
+package solutions.fairdata.fdp.index.entity.events;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import solutions.fairdata.fdp.index.entity.IndexEntry;
+import lombok.Data;
+import solutions.fairdata.fdp.index.entity.RepositoryMetadata;
+import solutions.fairdata.fdp.index.entity.http.Exchange;
 
-import java.util.Optional;
-
-public interface EntryRepository extends MongoRepository<IndexEntry, String> {
-    Optional<IndexEntry> findByClientUrl(String clientUrl);
+@Data
+public class MetadataRetrieval {
+    private String error;
+    private Exchange exchange;
+    private RepositoryMetadata metadata;
 }

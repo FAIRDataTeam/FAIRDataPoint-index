@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.util.UriComponentsBuilder;
 import solutions.fairdata.fdp.index.WebIntegrationTest;
-import solutions.fairdata.fdp.index.database.repository.EntryRepository;
+import solutions.fairdata.fdp.index.database.repository.IndexEntryRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.fixtures.IndexEntryFixtures;
 
@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class Home_GET_Test extends WebIntegrationTest {
 
     @Autowired
-    private EntryRepository entryRepository;
+    private IndexEntryRepository indexEntryRepository;
 
     private URI url() {
         return URI.create("/");
@@ -92,7 +92,7 @@ public class Home_GET_Test extends WebIntegrationTest {
         // GIVEN (prepare data)
         mongoTemplate.getDb().drop();
         List<IndexEntry> entries = IndexEntryFixtures.entriesFew();
-        entryRepository.saveAll(entries);
+        indexEntryRepository.saveAll(entries);
 
         // AND (prepare request)
         RequestBuilder request = MockMvcRequestBuilders
@@ -127,7 +127,7 @@ public class Home_GET_Test extends WebIntegrationTest {
         int size = 50;
         mongoTemplate.getDb().drop();
         List<IndexEntry> entries = IndexEntryFixtures.entriesN(items);
-        entryRepository.saveAll(entries);
+        indexEntryRepository.saveAll(entries);
 
         // AND (prepare request)
         RequestBuilder request = MockMvcRequestBuilders
@@ -163,7 +163,7 @@ public class Home_GET_Test extends WebIntegrationTest {
         int page = 7;
         mongoTemplate.getDb().drop();
         List<IndexEntry> entries = IndexEntryFixtures.entriesN(items);
-        entryRepository.saveAll(entries);
+        indexEntryRepository.saveAll(entries);
 
         // AND (prepare request)
         RequestBuilder request = MockMvcRequestBuilders
@@ -199,7 +199,7 @@ public class Home_GET_Test extends WebIntegrationTest {
         int page = 4;
         mongoTemplate.getDb().drop();
         List<IndexEntry> entries = IndexEntryFixtures.entriesN(items);
-        entryRepository.saveAll(entries);
+        indexEntryRepository.saveAll(entries);
 
         // AND (prepare request)
         RequestBuilder request = MockMvcRequestBuilders

@@ -2,6 +2,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/fdp-index
+      auto-index-creation: false
     web:
       pageable:
         size-parameter: size
@@ -11,6 +12,13 @@ spring:
         max-page-size: 2000
         prefix:
         qualifier-delimiter: _
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 5
+        queue-capacity: 5000
+      thread-name-prefix: fdpindex-task-
 
 fdp-index:
   api:

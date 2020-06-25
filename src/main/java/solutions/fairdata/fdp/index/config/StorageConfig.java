@@ -45,7 +45,7 @@ public class StorageConfig {
     @Bean
     public Mongobee mongobee() throws Exception {
         Mongobee runner = new Mongobee(mongoUri);
-        runner.setChangeLogsScanPackage("solutions.fairdata.fdp.index.storage.changelogs");
+        runner.setChangeLogsScanPackage("solutions.fairdata.fdp.index.database.changelogs");
         runner.setSpringEnvironment(environment);
         runner.execute();
         return runner;

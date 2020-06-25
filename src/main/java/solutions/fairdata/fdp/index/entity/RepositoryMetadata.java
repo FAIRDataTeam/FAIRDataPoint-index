@@ -23,26 +23,19 @@
 package solutions.fairdata.fdp.index.entity;
 
 import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.Instant;
+import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 
-@Document
 @Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    @Indexed(unique=true)
-    private String clientUrl;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant registrationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant modificationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant lastRetrievalTime;
-    private RepositoryMetadata currentMetadata;
+public class RepositoryMetadata {
+
+    public static final Integer CURRENT_VERSION = 1;
+
+    private Integer metadataVersion = CURRENT_VERSION;
+
+    private String repositoryUri;
+
+    @NotNull
+    private HashMap<String, String> metadata = new HashMap<>();
 }

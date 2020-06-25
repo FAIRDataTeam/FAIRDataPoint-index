@@ -20,29 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity;
+package solutions.fairdata.fdp.index.entity.http;
 
 import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpEntity;
 
-import java.time.Instant;
+import javax.servlet.http.HttpServletRequest;
+import java.net.http.HttpRequest;
+import java.util.List;
+import java.util.Map;
 
-@Document
 @Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    @Indexed(unique=true)
-    private String clientUrl;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant registrationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant modificationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant lastRetrievalTime;
-    private RepositoryMetadata currentMetadata;
+public class Request {
+    private String method;
+    private String url;
+
+    private Map<String, List<String>> headers;
+    private String body;
+
+    public void setFromHttpEntity(HttpEntity<String> httpEntity) {
+        body = httpEntity.getBody();
+        headers = httpEntity.getHeaders();
+    }
+
+    public void setFromHttpServletRequest(HttpServletRequest request) {
+        method = request.getMethod();
+        url = request.getRequestURI();
+    }
+
+    public void setFromHttpRequest(HttpRequest request) {
+        method = request.method();
+        url = request.uri().toString();
+        body = request.bodyPublisher().map(Object::toString).orElse(null);
+        headers = request.headers().map();
+    }
 }

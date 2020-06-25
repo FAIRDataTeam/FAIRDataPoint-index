@@ -34,7 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 import solutions.fairdata.fdp.index.WebIntegrationTest;
 import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
-import solutions.fairdata.fdp.index.database.repository.EntryRepository;
+import solutions.fairdata.fdp.index.database.repository.IndexEntryRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.fixtures.IndexEntryFixtures;
 import solutions.fairdata.fdp.index.utils.CustomPageImpl;
@@ -51,7 +51,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 public class EntriesPage_GET_Test extends WebIntegrationTest {
 
     @Autowired
-    private EntryRepository entryRepository;
+    private IndexEntryRepository indexEntryRepository;
 
     private final ParameterizedTypeReference<CustomPageImpl<IndexEntryDTO>> responseType = new ParameterizedTypeReference<>() {};
 
@@ -130,7 +130,7 @@ public class EntriesPage_GET_Test extends WebIntegrationTest {
         // GIVEN (prepare data)
         mongoTemplate.getDb().drop();
         List<IndexEntry> entries = IndexEntryFixtures.entriesFew();
-        entryRepository.saveAll(entries);
+        indexEntryRepository.saveAll(entries);
 
         // AND (prepare request)
         RequestEntity<?> request = RequestEntity
@@ -164,7 +164,7 @@ public class EntriesPage_GET_Test extends WebIntegrationTest {
         int page = 3;
         mongoTemplate.getDb().drop();
         List<IndexEntry> entries = IndexEntryFixtures.entriesN(items);
-        entryRepository.saveAll(entries);
+        indexEntryRepository.saveAll(entries);
 
         // AND (prepare request)
         RequestEntity<?> request = RequestEntity
@@ -196,7 +196,7 @@ public class EntriesPage_GET_Test extends WebIntegrationTest {
         int page = 3;
         mongoTemplate.getDb().drop();
         List<IndexEntry> entries = IndexEntryFixtures.entriesN(items);
-        entryRepository.saveAll(entries);
+        indexEntryRepository.saveAll(entries);
 
         // AND (prepare request)
         RequestEntity<?> request = RequestEntity

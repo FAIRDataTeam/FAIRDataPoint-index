@@ -20,29 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity;
+package solutions.fairdata.fdp.index.database.repository;
 
-import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
 
-import java.time.Instant;
+import java.util.Optional;
 
-@Document
-@Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    @Indexed(unique=true)
-    private String clientUrl;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant registrationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant modificationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant lastRetrievalTime;
-    private RepositoryMetadata currentMetadata;
+public interface IndexEntryRepository extends MongoRepository<IndexEntry, String> {
+    Optional<IndexEntry> findByClientUrl(String clientUrl);
 }

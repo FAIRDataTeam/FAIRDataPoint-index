@@ -20,29 +20,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity;
+package solutions.fairdata.fdp.index.config;
 
-import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
-import java.time.Instant;
+@Configuration
+public class ObjectMapperConfig {
 
-@Document
-@Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    @Indexed(unique=true)
-    private String clientUrl;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant registrationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant modificationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant lastRetrievalTime;
-    private RepositoryMetadata currentMetadata;
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return mapper;
+    }
 }

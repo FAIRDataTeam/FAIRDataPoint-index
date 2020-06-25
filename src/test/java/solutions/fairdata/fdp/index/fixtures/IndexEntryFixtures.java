@@ -24,13 +24,14 @@ package solutions.fairdata.fdp.index.fixtures;
 
 import solutions.fairdata.fdp.index.entity.IndexEntry;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class IndexEntryFixtures {
 
-    private static final String TIMESTAMP = "2020-01-01T00:00:00Z";
+    private static final Instant TIMESTAMP = Instant.parse("2020-01-01T00:00:00Z");
 
     private static IndexEntry newIndexEntry(String clientUrl) {
         IndexEntry indexEntry = new IndexEntry();
