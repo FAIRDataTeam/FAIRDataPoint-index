@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"
+      layout:decorate="~{layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://thymeleaf.org">
+<head></head>
+<body>
+<section layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{'/'}">FAIR Data Point Index</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${clientUrl}"></li>
+        </ol>
+    </nav>
+
+    <div th:if="${entry.isPresent()}" class="entry-label">
+        <a th:if="${entry.get().currentMetadata != null && entry.get().lastRetrievalAgo < pingValidDuration}" th:href="${clientUrl}" target="_blank" class="badge badge-success" title="Metadata about repository have been retrieved">Verified</a>
+        <span th:if="${entry.get().currentMetadata != null && entry.get().lastRetrievalAgo >= pingValidDuration}" class="badge badge-warning" title="This FAIR Data Point does not seem to be working anymore">Dead</span>
+        <span th:if="${entry.get().currentMetadata == null}" class="badge badge-danger" title="Metadata about FAIR Data Point could not be retrieved">Error</span>
+    </div>
+
+    <div th:if="${entry.isEmpty()}" class="entry-label">
+        <span class="badge badge-info" title="Metadata about FAIR Data Point could not be retrieved">Not found</span>
+    </div>
+
+    <h2 class="entry-title">FDP <a target="_blank" th:href="${clientUrl}" th:text="${clientUrl}"></a></h2>
+
+    <div th:if="${entry.isEmpty()}" class="entry entry-empty error">
+        <img th:src="@{'/img/no_data.svg'}" class="error-img" alt="No data">
+        <div class="error-text">
+            <h3 class="error-title">No records</h3>
+            <p class="error-description">Sorry, but we don't know anything about such FAIR Data Point...</p>
+        </div>
+    </div>
+
+    <div th:if="${entry.isPresent()}" class="entry entry-found">
+        <div class="entry-block entry-timestamps">
+            <h3>Timestamps</h3>
+            <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <th>Registered <span class="text-muted">(first contact)</span></th>
+                        <td class="timestamp" th:text="${entry.get().registrationTime}"></td>
+                    </tr>
+                    <tr>
+                        <th>Modified <span class="text-muted">(last contact)</span></th>
+                        <td class="timestamp" th:text="${entry.get().modificationTime}"></td>
+                    </tr>
+                    <tr>
+                        <th>Verified <span class="text-muted">(last metadata retrieval)</span></th>
+                        <td class="empty right" th:if="${entry.get().lastRetrievalTime == null}">never</td>
+                        <td class="timestamp" th:text="${entry.get().lastRetrievalTime}" th:if="${entry.get().lastRetrievalTime != null}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="entry-block entry-metadata" th:if="${entry.get().currentMetadata != null}">
+            <h3>Repository metadata</h3>
+            <table class="table table-borderless">
+                <tbody>
+                <tr>
+                    <th>Repository URI</th>
+                    <td><a th:href="${entry.get().currentMetadata.repositoryUri}" th:text="${entry.get().currentMetadata.repositoryUri}" target="_blank"></a></td>
+                </tr>
+                <tr th:each="key : ${basicMetadata}" th:if="${entry.get().currentMetadata.metadata.containsKey(key)}">
+                    <th th:text="${#strings.capitalize(key)}"></th>
+                    <td th:text="${entry.get().currentMetadata.metadata.get(key)}"></td>
+                </tr>
+                <tr th:each="info : ${entry.get().currentMetadata.metadata}" th:if="${!basicMetadata.contains(info.key)}">
+                    <th th:text="${#strings.capitalize(info.key)}"></th>
+                    <td th:text="${info.value}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="entry-block entry-events">
+            <h3>Events</h3>
+            <p>Last 10 events related to this entry:</p>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>UUID</th>
+                        <th>Type</th>
+                        <th class="right">Created</th>
+                        <th class="right">Finished</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="event : ${events}">
+                        <td><code th:text="${event.uuid}"></code></td>
+                        <td th:text="${event.type}"></td>
+                        <td th:text="${event.created}" class="timestamp"></td>
+                        <td th:if="${event.finished != null}" th:text="${event.finished}" class="timestamp"></td>
+                        <td th:if="${event.finished == null}" class="right">N/A</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="../static/js/localize-timestamps.js" th:src="@{/js/localize-timestamps.js}"></script>
+</section>
+</body>
+</html>

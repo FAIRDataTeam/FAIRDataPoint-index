@@ -24,7 +24,6 @@ package solutions.fairdata.fdp.index.utils;
 
 import org.springframework.http.HttpEntity;
 import solutions.fairdata.fdp.index.entity.events.Event;
-import solutions.fairdata.fdp.index.entity.events.EventType;
 import solutions.fairdata.fdp.index.entity.events.IncomingPing;
 import solutions.fairdata.fdp.index.entity.http.Exchange;
 import solutions.fairdata.fdp.index.entity.http.ExchangeDirection;

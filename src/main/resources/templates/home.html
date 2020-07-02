@@ -24,15 +24,23 @@
                 <a class="sort-link sort-link-asc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='modificationTime,asc')}" th:classappend="${sort == 'modificationTime,asc' ? 'active' : ''}">&#9650;</a>
                 <a class="sort-link sort-link-desc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='modificationTime,desc')}" th:classappend="${sort == 'modificationTime,desc' ? 'active' : ''}">&#9660;</a>
             </th>
+            <th>
+
+            </th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="entry : ${entries}">
             <td class="endpoint">
-                <a target="_blank" th:href="${entry.clientUrl}" th:text="${entry.clientUrl}"></a>
+                <a th:href="@{'/entry'(clientUrl=${entry.clientUrl})}" th:text="${entry.clientUrl}"></a>
             </td>
             <td class="timestamp" th:text="${entry.registrationTime}"></td>
             <td class="timestamp" th:text="${entry.modificationTime}"></td>
+            <td class="right">
+                <a th:if="${entry.currentMetadata != null && entry.lastRetrievalAgo < deprecatedDuration}" th:href="${entry.clientUrl}" target="_blank" class="badge badge-success" title="Metadata about repository have been retrieved">Verified</a>
+                <span th:if="${entry.currentMetadata != null && entry.lastRetrievalAgo >= deprecatedDuration}" class="badge badge-warning" title="This FAIR Data Point does not seem to be working anymore">Dead</span>
+                <span th:if="${entry.currentMetadata == null}" class="badge badge-danger" title="Metadata about FAIR Data Point could not be retrieved">Error</span>
+            </td>
         </tr>
         </tbody>
     </table>

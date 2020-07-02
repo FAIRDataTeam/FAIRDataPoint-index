@@ -22,7 +22,9 @@
  */
 package solutions.fairdata.fdp.index.entity.events;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -36,6 +38,8 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "event")
 public class Event {
     @Id

@@ -52,16 +52,11 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
-
 public class MetadataRetrievalUtils {
 
     private static final EventType EVENT_TYPE = EventType.MetadataRetrieval;
 
     private static final Integer VERSION = 1;
-
-    private static final Duration TIMEOUT = Duration.ofMinutes(1); // TODO: configurable
-
-    private static final Duration RETRIEVAL_WAIT = Duration.ofMinutes(10); // TODO: configurable
 
     private static final IRI REPOSITORY = SimpleValueFactory.getInstance().createIRI("http://www.re3data.org/schema/3-0#Repository");
 
@@ -76,7 +71,7 @@ public class MetadataRetrievalUtils {
             .followRedirects(HttpClient.Redirect.ALWAYS)
             .build();
 
-    public static boolean shouldRetrieve(Event triggerEvent) {
+    public static boolean shouldRetrieve(Event triggerEvent, Duration rateLimitWait) {
         if (triggerEvent.getRelatedTo() == null) {
             return false;
         }
@@ -84,14 +79,14 @@ public class MetadataRetrievalUtils {
         if (lastRetrieval == null) {
             return true;
         }
-        return Duration.between(lastRetrieval, Instant.now()).compareTo(RETRIEVAL_WAIT) > 0;
+        return Duration.between(lastRetrieval, Instant.now()).compareTo(rateLimitWait) > 0;
     }
 
     public static Event prepareEvent(Event triggerEvent) {
         return new Event(VERSION, triggerEvent, triggerEvent.getRelatedTo(), new MetadataRetrieval());
     }
 
-    public static void retrieveRepositoryMetadata(Event event) {
+    public static void retrieveRepositoryMetadata(Event event, Duration timeout) {
         if (event.getType() != EVENT_TYPE) {
             throw new IllegalArgumentException("Invalid event type");
         }
@@ -100,7 +95,7 @@ public class MetadataRetrievalUtils {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(event.getRelatedTo().getClientUrl()))
-                    .timeout(TIMEOUT)
+                    .timeout(timeout)
                     .header(HttpHeaders.ACCEPT, RDFFormat.TURTLE.getDefaultMIMEType())
                     .GET().build();
             ex.getRequest().setFromHttpRequest(request);

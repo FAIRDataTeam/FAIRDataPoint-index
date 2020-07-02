@@ -20,17 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.database.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import solutions.fairdata.fdp.index.entity.IndexEntry;
-import solutions.fairdata.fdp.index.entity.events.Event;
-
-public interface EventRepository extends MongoRepository<Event, String> {
-
-    Iterable<Event> getAllByFinishedIsNull();
-
-    Page<Event> getAllByRelatedTo(IndexEntry indexEntry, Pageable pageable);
-}
+@javax.annotation.ParametersAreNonnullByDefault
+package solutions.fairdata.fdp.index.entity.config;

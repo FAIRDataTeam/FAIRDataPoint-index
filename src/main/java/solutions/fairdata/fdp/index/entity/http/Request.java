@@ -22,7 +22,9 @@
  */
 package solutions.fairdata.fdp.index.entity.http;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Request {
     private String method;
     private String url;

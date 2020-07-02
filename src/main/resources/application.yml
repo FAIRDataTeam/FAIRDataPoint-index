@@ -27,3 +27,9 @@ fdp-index:
     description: This is OpenAPI specification of FAIR Data Point Index REST API.
     contactUrl: https://github.com/FAIRDataTeam/FAIRDataPoint-index
     contactName: GitHub repository
+  events:
+    retrieval:
+      rateLimitWait: PT10M # 10 minutes (ISO 8601)
+      timeout: PT1M # 1 minute (ISO 8601)
+    ping:
+      validDuration: PT1M # 7 days (ISO 8601)

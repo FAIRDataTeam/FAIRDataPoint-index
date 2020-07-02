@@ -22,11 +22,15 @@
  */
 package solutions.fairdata.fdp.index.entity.events;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import solutions.fairdata.fdp.index.entity.RepositoryMetadata;
 import solutions.fairdata.fdp.index.entity.http.Exchange;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MetadataRetrieval {
     private String error;
     private Exchange exchange;

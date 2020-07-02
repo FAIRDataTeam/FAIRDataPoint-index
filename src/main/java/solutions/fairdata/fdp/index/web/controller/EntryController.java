@@ -23,35 +23,36 @@
 package solutions.fairdata.fdp.index.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import solutions.fairdata.fdp.index.entity.config.EventsConfig;
+import solutions.fairdata.fdp.index.service.EventService;
 import solutions.fairdata.fdp.index.service.IndexEntryService;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/")
-public class HomeController {
+@RequestMapping("/entry")
+public class EntryController {
     @Autowired
-    private IndexEntryService service;
+    private IndexEntryService indexEntryService;
+
+    @Autowired
+    private EventService eventService;
 
     @Autowired
     private EventsConfig eventsConfig;
 
     @GetMapping
-    public String home(Model model, @SortDefault(sort = "modificationTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        var sort = pageable.getSort().stream()
-            .findFirst()
-            .map(o -> o.getProperty() + "," + o.getDirection().name().toLowerCase())
-            .orElse("");
-
-        model.addAttribute("entries", service.getEntriesPage(pageable));
-        model.addAttribute("deprecatedDuration", eventsConfig.getPingValidDuration());
-        model.addAttribute("sort", sort);
-        return "home";
+    public String home(Model model, @RequestParam String clientUrl) {
+        model.addAttribute("clientUrl", clientUrl);
+        model.addAttribute("entry", indexEntryService.findEntry(clientUrl));
+        model.addAttribute("events", eventService.getEvents(clientUrl));
+        model.addAttribute("pingValidDuration", eventsConfig.getPingValidDuration());
+        model.addAttribute("basicMetadata", List.of("title", "version"));
+        return "entry";
     }
 }

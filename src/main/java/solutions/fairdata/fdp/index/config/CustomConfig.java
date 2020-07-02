@@ -20,34 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity;
+package solutions.fairdata.fdp.index.config;
 
+import lombok.Builder;
 import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import solutions.fairdata.fdp.index.entity.config.EventsConfig;
 
 import java.time.Duration;
-import java.time.Instant;
 
-@Document
-@Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    @Indexed(unique=true)
-    private String clientUrl;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant registrationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant modificationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant lastRetrievalTime;
-    private RepositoryMetadata currentMetadata;
+@Configuration
+public class CustomConfig {
 
-    public Duration getLastRetrievalAgo() {
-        return Duration.between(lastRetrievalTime, Instant.now());
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public EventsConfig eventsConfig(
+            @Value("${fdp-index.events.retrieval.rateLimitWait:PT10M}") String cfgRetrievalRateLimitWait,
+            @Value("${fdp-index.events.retrieval.timeout:PT1M}") String cfgRetrievalTimeout,
+            @Value("${fdp-index.events.ping.validDuration:P7D}") String cfgPingValidDuration
+    ) {
+        return EventsConfig.builder()
+                .retrievalRateLimitWait(Duration.parse(cfgRetrievalRateLimitWait))
+                .retrievalTimeout(Duration.parse(cfgRetrievalTimeout))
+                .pingValidDuration(Duration.parse(cfgPingValidDuration))
+                .build();
     }
 }

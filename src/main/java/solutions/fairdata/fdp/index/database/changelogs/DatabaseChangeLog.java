@@ -41,19 +41,7 @@ public class DatabaseChangeLog {
         // Nothing to DO, just "first" making the version
     }
 
-    @ChangeSet(order = "001", id = "introduceEvents", author = "MarekSuchanek")
-    public void introduceEvents(MongoDatabase db) {
-        MongoCollection<Document> indexEntries = db.getCollection("indexEntry");
-        indexEntries.updateMany(
-                Filters.exists("currentMetadata", false),
-                Updates.combine(
-                    Updates.set("currentMetadata", null),
-                    Updates.set("lastRetrievalTime", null)
-                )
-        );
-    }
-
-    @ChangeSet(order = "002", id = "entryTimestampsToInstant", author = "MarekSuchanek")
+    @ChangeSet(order = "001", id = "entryTimestampsToInstant", author = "MarekSuchanek")
     public void entryTimestampsToInstant(MongoDatabase db) {
         MongoCollection<Document> indexEntries = db.getCollection("indexEntry");
         for (Document indexEntry : indexEntries.find()) {

@@ -22,9 +22,13 @@
  */
 package solutions.fairdata.fdp.index.entity.http;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Exchange {
     private ExchangeDirection direction;
     private ExchangeState state = ExchangeState.Prepared;

@@ -22,13 +22,17 @@
  */
 package solutions.fairdata.fdp.index.entity.http;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Response {
     private Integer code;
     private String url;

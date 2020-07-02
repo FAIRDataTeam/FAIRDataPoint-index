@@ -51,13 +51,18 @@ footer div.container {
   padding: 2rem;
 }
 
-table.entries td.endpoint {
+table td.endpoint {
   overflow-wrap: anywhere;
 }
 
-table.entries td.timestamp,
-table.entries th.right {
+table td.timestamp,
+table th.right,
+table td.right {
   text-align: right;
+}
+
+td, th {
+  max-width: 20em;
 }
 
 a.sort-link:hover {
@@ -72,4 +77,37 @@ a.sort-link {
 a.sort-link.active {
   color: $primary;
   text-decoration: none;
+}
+
+div.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2em;
+}
+
+div.error > .error-img {
+  vertical-align: middle;
+  max-width: 30%;
+}
+
+div.error > .error-text {
+  margin: 1em;
+  max-width: 50%;
+}
+
+h2.entry-title {
+  margin: 1em 0;
+}
+div.entry-block {
+  margin-top: 1em;
+  padding-bottom: 0.5em;
+  border-top: 1px solid lightgray;
+  padding-top: 1.5em;
+}
+div.entry-block .table {
+  margin: 0;
+}
+div.entry-label {
+  float: right;
 }

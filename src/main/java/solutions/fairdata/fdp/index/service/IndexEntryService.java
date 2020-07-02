@@ -37,6 +37,7 @@ import solutions.fairdata.fdp.index.entity.IndexEntry;
 
 import javax.validation.Valid;
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 @Validated
@@ -72,6 +73,10 @@ public class IndexEntryService {
 
     public Page<IndexEntry> getEntriesPage(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    public Optional<IndexEntry> findEntry(String clientUrl) {
+        return repository.findByClientUrl(clientUrl);
     }
 
     public IndexEntryDTO toDTO(IndexEntry indexEntry) {
