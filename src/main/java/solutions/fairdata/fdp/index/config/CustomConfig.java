@@ -22,8 +22,6 @@
  */
 package solutions.fairdata.fdp.index.config;
 
-import lombok.Builder;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;

@@ -142,6 +142,7 @@ public class EventService {
         event.getRelatedTo().setLastRetrievalTime(Instant.now());
         event.finish();
         eventRepository.save(event);
+        indexEntryRepository.save(event.getRelatedTo());
     }
 
     @Async

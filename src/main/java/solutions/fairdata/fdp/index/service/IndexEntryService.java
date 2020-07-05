@@ -27,13 +27,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
 import solutions.fairdata.fdp.index.api.dto.PingDTO;
 import solutions.fairdata.fdp.index.database.repository.IndexEntryRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
+import solutions.fairdata.fdp.index.entity.config.EventsConfig;
 
 import javax.validation.Valid;
 import java.time.Instant;
@@ -46,6 +46,9 @@ public class IndexEntryService {
 
     @Autowired
     private IndexEntryRepository repository;
+
+    @Autowired
+    private EventsConfig eventsConfig;
 
     public IndexEntry storeEntry(@Valid PingDTO pingDTO) {
         var clientUrl = pingDTO.getClientUrl();
@@ -85,5 +88,18 @@ public class IndexEntryService {
         dto.setRegistrationTime(indexEntry.getRegistrationTime().toString());
         dto.setModificationTime(indexEntry.getModificationTime().toString());
         return dto;
+    }
+
+    public long countAllEntries() {
+        return repository.count();
+    }
+
+    public long countNeverReachableEntries() {
+        return repository.countAllByLastRetrievalTimeIsNull();
+    }
+
+    public long countUnreachableEntries() {
+        Instant validThreshold = Instant.now().minus(eventsConfig.getPingValidDuration());
+        return repository.countAllByLastRetrievalTimeBefore(validThreshold);
     }
 }

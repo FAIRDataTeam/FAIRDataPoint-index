@@ -48,6 +48,9 @@ public class IndexEntry {
     private RepositoryMetadata currentMetadata;
 
     public Duration getLastRetrievalAgo() {
+        if (lastRetrievalTime == null) {
+            return null;
+        }
         return Duration.between(lastRetrievalTime, Instant.now());
     }
 }

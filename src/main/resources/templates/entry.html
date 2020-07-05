@@ -14,9 +14,9 @@
     </nav>
 
     <div th:if="${entry.isPresent()}" class="entry-label">
-        <a th:if="${entry.get().currentMetadata != null && entry.get().lastRetrievalAgo < pingValidDuration}" th:href="${clientUrl}" target="_blank" class="badge badge-success" title="Metadata about repository have been retrieved">Verified</a>
-        <span th:if="${entry.get().currentMetadata != null && entry.get().lastRetrievalAgo >= pingValidDuration}" class="badge badge-warning" title="This FAIR Data Point does not seem to be working anymore">Dead</span>
-        <span th:if="${entry.get().currentMetadata == null}" class="badge badge-danger" title="Metadata about FAIR Data Point could not be retrieved">Error</span>
+        <a th:if="${entry.get().currentMetadata != null && entry.get().lastRetrievalAgo < pingValidDuration}" th:href="${clientUrl}" target="_blank" class="badge badge-success" title="Metadata about repository have been retrieved">Reachable</a>
+        <span th:if="${entry.get().currentMetadata != null && entry.get().lastRetrievalAgo >= pingValidDuration}" class="badge badge-warning" title="This FAIR Data Point does not seem to be working anymore">Unreachable</span>
+        <span th:if="${entry.get().currentMetadata == null}" class="badge badge-danger" title="Metadata about FAIR Data Point could not be retrieved">Invalid</span>
     </div>
 
     <div th:if="${entry.isEmpty()}" class="entry-label">
@@ -81,7 +81,6 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>UUID</th>
                         <th>Type</th>
                         <th class="right">Created</th>
                         <th class="right">Finished</th>
@@ -89,7 +88,6 @@
                 </thead>
                 <tbody>
                     <tr th:each="event : ${events}">
-                        <td><code th:text="${event.uuid}"></code></td>
                         <td th:text="${event.type}"></td>
                         <td th:text="${event.created}" class="timestamp"></td>
                         <td th:if="${event.finished != null}" th:text="${event.finished}" class="timestamp"></td>

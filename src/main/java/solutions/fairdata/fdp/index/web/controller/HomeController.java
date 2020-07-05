@@ -37,7 +37,7 @@ import solutions.fairdata.fdp.index.service.IndexEntryService;
 @RequestMapping("/")
 public class HomeController {
     @Autowired
-    private IndexEntryService service;
+    private IndexEntryService indexEntryService;
 
     @Autowired
     private EventsConfig eventsConfig;
@@ -49,8 +49,11 @@ public class HomeController {
             .map(o -> o.getProperty() + "," + o.getDirection().name().toLowerCase())
             .orElse("");
 
-        model.addAttribute("entries", service.getEntriesPage(pageable));
+        model.addAttribute("entries", indexEntryService.getEntriesPage(pageable));
         model.addAttribute("deprecatedDuration", eventsConfig.getPingValidDuration());
+        model.addAttribute("countAll", indexEntryService.countAllEntries());
+        model.addAttribute("countUnreachable", indexEntryService.countUnreachableEntries());
+        model.addAttribute("countNeverReachable", indexEntryService.countNeverReachableEntries());
         model.addAttribute("sort", sort);
         return "home";
     }

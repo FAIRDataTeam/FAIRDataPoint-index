@@ -25,8 +25,12 @@ package solutions.fairdata.fdp.index.database.repository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
 
+import java.time.Instant;
 import java.util.Optional;
 
 public interface IndexEntryRepository extends MongoRepository<IndexEntry, String> {
     Optional<IndexEntry> findByClientUrl(String clientUrl);
+
+    long countAllByLastRetrievalTimeIsNull();
+    long countAllByLastRetrievalTimeBefore(Instant when);
 }

@@ -111,3 +111,24 @@ div.entry-block .table {
 div.entry-label {
   float: right;
 }
+
+
+div.index-stats {
+  margin-bottom: 1em;
+}
+
+div.index-stat {
+  margin: 1em;
+  padding: 1em;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+  text-align: center;
+}
+
+div.index-stat div.number {
+  font-weight: bold;
+  font-size: 140%;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 0.3em;
+}
