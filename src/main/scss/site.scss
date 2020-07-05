@@ -113,19 +113,27 @@ div.entry-label {
 }
 
 
-div.index-stats {
+.index-stats {
   margin-bottom: 1em;
 }
 
-div.index-stat {
+a.index-stat {
   margin: 1em;
   padding: 1em;
   background: rgba(0, 0, 0, 0.05);
   border-radius: 5px;
   text-align: center;
+  display: block;
+  color: black;
+  text-decoration: none;
+  border: 3px solid $secondary;
 }
 
-div.index-stat div.number {
+a.index-stat.active {
+  border: 3px solid $primary;
+}
+
+.index-stat .number {
   font-weight: bold;
   font-size: 140%;
   padding-bottom: 0.3em;

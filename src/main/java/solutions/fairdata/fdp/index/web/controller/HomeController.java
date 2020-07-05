@@ -30,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import solutions.fairdata.fdp.index.entity.config.EventsConfig;
 import solutions.fairdata.fdp.index.service.IndexEntryService;
 
@@ -43,18 +44,19 @@ public class HomeController {
     private EventsConfig eventsConfig;
 
     @GetMapping
-    public String home(Model model, @SortDefault(sort = "modificationTime", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String home(Model model, @SortDefault(sort = "modificationTime", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(defaultValue = "reachable") String state) {
         var sort = pageable.getSort().stream()
             .findFirst()
             .map(o -> o.getProperty() + "," + o.getDirection().name().toLowerCase())
             .orElse("");
 
-        model.addAttribute("entries", indexEntryService.getEntriesPage(pageable));
+        model.addAttribute("entries", indexEntryService.getEntriesPage(pageable, state));
         model.addAttribute("deprecatedDuration", eventsConfig.getPingValidDuration());
         model.addAttribute("countAll", indexEntryService.countAllEntries());
         model.addAttribute("countUnreachable", indexEntryService.countUnreachableEntries());
-        model.addAttribute("countNeverReachable", indexEntryService.countNeverReachableEntries());
+        model.addAttribute("countInvalid", indexEntryService.countInvalidEntries());
         model.addAttribute("sort", sort);
+        model.addAttribute("state", state);
         return "home";
     }
 }

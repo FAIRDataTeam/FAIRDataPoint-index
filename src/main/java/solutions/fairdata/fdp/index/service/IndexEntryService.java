@@ -74,7 +74,16 @@ public class IndexEntryService {
         return repository.findAll();
     }
 
-    public Page<IndexEntry> getEntriesPage(Pageable pageable) {
+    public Page<IndexEntry> getEntriesPage(Pageable pageable, String state) {
+        if (state.equalsIgnoreCase("reachable")) {
+            return repository.findAllByLastRetrievalTimeAfter(pageable, getValidTreshold());
+        }
+        if (state.equalsIgnoreCase("unreachable")) {
+            return repository.findAllByLastRetrievalTimeBefore(pageable, getValidTreshold());
+        }
+        if (state.equalsIgnoreCase("invalid")) {
+            return repository.findAllByLastRetrievalTimeIsNull(pageable);
+        }
         return repository.findAll(pageable);
     }
 
@@ -94,12 +103,15 @@ public class IndexEntryService {
         return repository.count();
     }
 
-    public long countNeverReachableEntries() {
+    public long countInvalidEntries() {
         return repository.countAllByLastRetrievalTimeIsNull();
     }
 
     public long countUnreachableEntries() {
-        Instant validThreshold = Instant.now().minus(eventsConfig.getPingValidDuration());
-        return repository.countAllByLastRetrievalTimeBefore(validThreshold);
+        return repository.countAllByLastRetrievalTimeBefore(getValidTreshold());
+    }
+
+    private Instant getValidTreshold() {
+        return Instant.now().minus(eventsConfig.getPingValidDuration());
     }
 }

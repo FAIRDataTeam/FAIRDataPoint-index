@@ -8,28 +8,32 @@
 <section layout:fragment="content">
     <div class="row index-stats">
         <div class="col-3">
-            <div class="index-stat">
+            <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='all')}" class="index-stat" th:classappend="${state=='all' ? 'active' : ''}"
+               title="All indexed records regardless its state.">
                 <div class="number" th:text="${countAll}"></div>
                 <div class="explanation">Indexed</div>
-            </div>
+            </a>
         </div>
         <div class="col-3">
-            <div class="index-stat">
-                <div class="number" th:text="${countAll - countUnreachable - countNeverReachable}"></div>
+            <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='reachable')}" class="index-stat" th:classappend="${state=='reachable' ? 'active' : ''}"
+               title="FAIR Data Points that regularly send PING and are verified.">
+                <div class="number" th:text="${countAll - countUnreachable - countInvalid}"></div>
                 <div class="explanation">Reachable</div>
-            </div>
+            </a>
         </div>
         <div class="col-3">
-            <div class="index-stat">
+            <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='unreachable')}" class="index-stat" th:classappend="${state=='unreachable' ? 'active' : ''}"
+               title="FAIR Data Points that were verified in the past but we did not receive PING for a longer time.">
                 <div class="number" th:text="${countUnreachable}"></div>
                 <div class="explanation">Unreachable</div>
-            </div>
+            </a>
         </div>
         <div class="col-3">
-            <div class="index-stat">
-                <div class="number" th:text="${countNeverReachable}"></div>
+            <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='invalid')}" class="index-stat" th:classappend="${state=='invalid' ? 'active' : ''}"
+               title="Entries that were never succesfully verified to be FAIR Data Point.">
+                <div class="number" th:text="${countInvalid}"></div>
                 <div class="explanation">Invalid</div>
-            </div>
+            </a>
         </div>
     </div>
     <table class="table table-striped" id="entries">
@@ -128,7 +132,7 @@
         </nav>
     </div>
     <div class="clearfix"></div>
-    <script src="../static/js/localize-timestamps.js" th:src="@{/js/localize-timestamps.js}"></script>
+    <script th:src="@{/js/localize-timestamps.js}"></script>
 </section>
 </body>
 </html>

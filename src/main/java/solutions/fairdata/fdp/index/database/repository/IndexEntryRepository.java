@@ -22,6 +22,8 @@
  */
 package solutions.fairdata.fdp.index.database.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
 
@@ -30,6 +32,10 @@ import java.util.Optional;
 
 public interface IndexEntryRepository extends MongoRepository<IndexEntry, String> {
     Optional<IndexEntry> findByClientUrl(String clientUrl);
+
+    Page<IndexEntry> findAllByLastRetrievalTimeAfter(Pageable pageable, Instant when);
+    Page<IndexEntry> findAllByLastRetrievalTimeBefore(Pageable pageable, Instant when);
+    Page<IndexEntry> findAllByLastRetrievalTimeIsNull(Pageable pageable);
 
     long countAllByLastRetrievalTimeIsNull();
     long countAllByLastRetrievalTimeBefore(Instant when);
