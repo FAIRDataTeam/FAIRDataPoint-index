@@ -23,21 +23,21 @@
 package solutions.fairdata.fdp.index.fixtures;
 
 import solutions.fairdata.fdp.index.entity.IndexEntry;
+import solutions.fairdata.fdp.index.entity.RepositoryMetadata;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class IndexEntryFixtures {
-
-    private static final Instant TIMESTAMP = Instant.parse("2020-01-01T00:00:00Z");
 
     private static IndexEntry newIndexEntry(String clientUrl) {
         IndexEntry indexEntry = new IndexEntry();
         indexEntry.setClientUrl(clientUrl);
-        indexEntry.setModificationTime(TIMESTAMP);
-        indexEntry.setRegistrationTime(TIMESTAMP);
+        indexEntry.setModificationTime(Instant.now());
+        indexEntry.setRegistrationTime(Instant.now());
         return indexEntry;
     }
 
@@ -59,5 +59,20 @@ public class IndexEntryFixtures {
             entries.add(newIndexEntry("http://example" + i + ".com"));
         }
         return entries;
+    }
+
+    public static IndexEntry reachableEntry(String clientUrl) {
+        IndexEntry indexEntry = new IndexEntry();
+        indexEntry.setClientUrl(clientUrl);
+        indexEntry.setModificationTime(Instant.now());
+        indexEntry.setRegistrationTime(Instant.now());
+        indexEntry.setLastRetrievalTime(Instant.now());
+        indexEntry.setCurrentMetadata(new RepositoryMetadata());
+        indexEntry.getCurrentMetadata().setRepositoryUri("http://purl.org/example");
+        indexEntry.getCurrentMetadata().setMetadataVersion(1);
+        indexEntry.getCurrentMetadata().getMetadata().put("title", "Example FDP");
+        indexEntry.getCurrentMetadata().getMetadata().put("version", "1.0.0");
+        indexEntry.getCurrentMetadata().getMetadata().put("description", "This is my example FAIR Data Point");
+        return indexEntry;
     }
 }

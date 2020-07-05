@@ -25,15 +25,15 @@
 
     <h2 class="entry-title">FDP <a target="_blank" th:href="${clientUrl}" th:text="${clientUrl}"></a></h2>
 
-    <div th:if="${entry.isEmpty()}" class="entry entry-empty error">
-        <img th:src="@{'/img/no_data.svg'}" class="error-img" alt="No data">
+    <div th:if="${entry.isEmpty()}" class="entry entry-empty error" id="entryEmpty">
+        <img th:src="@{'/img/no_data.svg'}" class="error-img" alt="No data" />
         <div class="error-text">
             <h3 class="error-title">No records</h3>
             <p class="error-description">Sorry, but we don't know anything about such FAIR Data Point...</p>
         </div>
     </div>
 
-    <div th:if="${entry.isPresent()}" class="entry entry-found">
+    <div th:if="${entry.isPresent()}" class="entry entry-found" id="entryFound">
         <div class="entry-block entry-timestamps">
             <h3>Timestamps</h3>
             <table class="table table-borderless">
@@ -61,15 +61,15 @@
                 <tbody>
                 <tr>
                     <th>Repository URI</th>
-                    <td><a th:href="${entry.get().currentMetadata.repositoryUri}" th:text="${entry.get().currentMetadata.repositoryUri}" target="_blank"></a></td>
+                    <td id="repository-uri"><a th:href="${entry.get().currentMetadata.repositoryUri}" th:text="${entry.get().currentMetadata.repositoryUri}" target="_blank"></a></td>
                 </tr>
                 <tr th:each="key : ${basicMetadata}" th:if="${entry.get().currentMetadata.metadata.containsKey(key)}">
                     <th th:text="${#strings.capitalize(key)}"></th>
-                    <td th:text="${entry.get().currentMetadata.metadata.get(key)}"></td>
+                    <td th:text="${entry.get().currentMetadata.metadata.get(key)}" th:id="${'metadata-' + key}"></td>
                 </tr>
                 <tr th:each="info : ${entry.get().currentMetadata.metadata}" th:if="${!basicMetadata.contains(info.key)}">
                     <th th:text="${#strings.capitalize(info.key)}"></th>
-                    <td th:text="${info.value}"></td>
+                    <td th:text="${info.value}" th:id="${'metadata-' + info.key}"></td>
                 </tr>
                 </tbody>
             </table>

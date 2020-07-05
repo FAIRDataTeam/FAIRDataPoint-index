@@ -49,6 +49,7 @@ public class Home_GET_Test extends WebIntegrationTest {
     private URI url() {
         return URI.create("/");
     }
+
     private URI urlWithoutPagination() {
         return UriComponentsBuilder.fromUri(url())
                 .queryParam("state", "all")
