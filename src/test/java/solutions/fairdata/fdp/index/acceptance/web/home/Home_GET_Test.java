@@ -49,11 +49,17 @@ public class Home_GET_Test extends WebIntegrationTest {
     private URI url() {
         return URI.create("/");
     }
+    private URI urlWithoutPagination() {
+        return UriComponentsBuilder.fromUri(url())
+                .queryParam("state", "all")
+                .build().toUri();
+    }
 
     private URI urlWithPageSize(int page, int size) {
         return UriComponentsBuilder.fromUri(url())
                 .queryParam("page", page)
                 .queryParam("size", size)
+                .queryParam("state", "all")
                 .build().toUri();
     }
 
@@ -65,7 +71,7 @@ public class Home_GET_Test extends WebIntegrationTest {
 
         // AND (prepare request)
         RequestBuilder request = MockMvcRequestBuilders
-                .get(url())
+                .get(urlWithoutPagination())
                 .accept(MediaType.TEXT_HTML);
 
         // WHEN
@@ -77,9 +83,9 @@ public class Home_GET_Test extends WebIntegrationTest {
                 .andExpect(view().name("home"))
                 .andExpect(xpath("//table[@id='entries']/thead/tr").exists())
                 .andExpect(xpath("//table[@id='entries']/tbody/tr").doesNotExist())
-                .andExpect(xpath("//span[@id='totalEntries']").string("0"))
-                .andExpect(xpath("//span[@id='currentPage']").string("1"))
-                .andExpect(xpath("//span[@id='totalPages']").string("1"))
+                .andExpect(xpath("//*[@id='totalEntries']").string("0"))
+                .andExpect(xpath("//*[@id='currentPage']").string("1"))
+                .andExpect(xpath("//*[@id='totalPages']").string("1"))
                 .andExpect(xpath("//*[@id='firstPage']/a").doesNotExist())
                 .andExpect(xpath("//*[@id='previousPage']/a").doesNotExist())
                 .andExpect(xpath("//*[@id='nextPage']/a").doesNotExist())
@@ -96,7 +102,7 @@ public class Home_GET_Test extends WebIntegrationTest {
 
         // AND (prepare request)
         RequestBuilder request = MockMvcRequestBuilders
-                .get(url())
+                .get(urlWithoutPagination())
                 .accept(MediaType.TEXT_HTML);
 
         // WHEN
@@ -110,9 +116,9 @@ public class Home_GET_Test extends WebIntegrationTest {
                 .andExpect(xpath("//table[@id='entries']/tbody/tr").nodeCount(entries.size()))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get(0).getClientUrl()))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string("/entry?clientUrl=" + entries.get(0).getClientUrl()))
-                .andExpect(xpath("//span[@id='totalEntries']").string(String.valueOf(entries.size())))
-                .andExpect(xpath("//span[@id='currentPage']").string("1"))
-                .andExpect(xpath("//span[@id='totalPages']").string("1"))
+                .andExpect(xpath("//*[@id='totalEntries']").string(String.valueOf(entries.size())))
+                .andExpect(xpath("//*[@id='currentPage']").string("1"))
+                .andExpect(xpath("//*[@id='totalPages']").string("1"))
                 .andExpect(xpath("//*[@id='firstPage']/a").doesNotExist())
                 .andExpect(xpath("//*[@id='previousPage']/a").doesNotExist())
                 .andExpect(xpath("//*[@id='nextPage']/a").doesNotExist())
@@ -145,9 +151,9 @@ public class Home_GET_Test extends WebIntegrationTest {
                 .andExpect(xpath("//table[@id='entries']/tbody/tr").nodeCount(size))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get(0).getClientUrl()))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string("/entry?clientUrl=" + entries.get(0).getClientUrl()))
-                .andExpect(xpath("//span[@id='totalEntries']").string(String.valueOf(items)))
-                .andExpect(xpath("//span[@id='currentPage']").string("1"))
-                .andExpect(xpath("//span[@id='totalPages']").string("7"))
+                .andExpect(xpath("//*[@id='totalEntries']").string(String.valueOf(items)))
+                .andExpect(xpath("//*[@id='currentPage']").string("1"))
+                .andExpect(xpath("//*[@id='totalPages']").string("7"))
                 .andExpect(xpath("//*[@id='firstPage']/a").doesNotExist())
                 .andExpect(xpath("//*[@id='previousPage']/a").doesNotExist())
                 .andExpect(xpath("//*[@id='nextPage']/a").exists())
@@ -181,9 +187,9 @@ public class Home_GET_Test extends WebIntegrationTest {
                 .andExpect(xpath("//table[@id='entries']/tbody/tr").nodeCount(33))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get((page - 1) * size).getClientUrl()))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string("/entry?clientUrl=" + entries.get((page - 1) * size).getClientUrl()))
-                .andExpect(xpath("//span[@id='totalEntries']").string(String.valueOf(items)))
-                .andExpect(xpath("//span[@id='currentPage']").string(String.valueOf(page)))
-                .andExpect(xpath("//span[@id='totalPages']").string(String.valueOf(page)))
+                .andExpect(xpath("//*[@id='totalEntries']").string(String.valueOf(items)))
+                .andExpect(xpath("//*[@id='currentPage']").string(String.valueOf(page)))
+                .andExpect(xpath("//*[@id='totalPages']").string(String.valueOf(page)))
                 .andExpect(xpath("//*[@id='firstPage']/a").exists())
                 .andExpect(xpath("//*[@id='previousPage']/a").exists())
                 .andExpect(xpath("//*[@id='nextPage']/a").doesNotExist())
@@ -217,9 +223,9 @@ public class Home_GET_Test extends WebIntegrationTest {
                 .andExpect(xpath("//table[@id='entries']/tbody/tr").nodeCount(size))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get((page - 1) * size).getClientUrl()))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string("/entry?clientUrl=" + entries.get((page - 1) * size).getClientUrl()))
-                .andExpect(xpath("//span[@id='totalEntries']").string(String.valueOf(items)))
-                .andExpect(xpath("//span[@id='currentPage']").string(String.valueOf(page)))
-                .andExpect(xpath("//span[@id='totalPages']").string(String.valueOf(7)))
+                .andExpect(xpath("//*[@id='totalEntries']").string(String.valueOf(items)))
+                .andExpect(xpath("//*[@id='currentPage']").string(String.valueOf(page)))
+                .andExpect(xpath("//*[@id='totalPages']").string(String.valueOf(7)))
                 .andExpect(xpath("//*[@id='firstPage']/a").exists())
                 .andExpect(xpath("//*[@id='previousPage']/a").exists())
                 .andExpect(xpath("//*[@id='nextPage']/a").exists())

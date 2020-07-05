@@ -10,28 +10,28 @@
         <div class="col-3">
             <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='all')}" class="index-stat" th:classappend="${state=='all' ? 'active' : ''}"
                title="All indexed records regardless its state.">
-                <div class="number" th:text="${countAll}"></div>
+                <div class="number" th:text="${countAll}" id="totalEntries"></div>
                 <div class="explanation">Indexed</div>
             </a>
         </div>
         <div class="col-3">
             <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='reachable')}" class="index-stat" th:classappend="${state=='reachable' ? 'active' : ''}"
                title="FAIR Data Points that regularly send PING and are verified.">
-                <div class="number" th:text="${countAll - countUnreachable - countInvalid}"></div>
+                <div class="number" th:text="${countAll - countUnreachable - countInvalid}" id="reachableEntries"></div>
                 <div class="explanation">Reachable</div>
             </a>
         </div>
         <div class="col-3">
             <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='unreachable')}" class="index-stat" th:classappend="${state=='unreachable' ? 'active' : ''}"
                title="FAIR Data Points that were verified in the past but we did not receive PING for a longer time.">
-                <div class="number" th:text="${countUnreachable}"></div>
+                <div class="number" th:text="${countUnreachable}" id="unreachableEntries"></div>
                 <div class="explanation">Unreachable</div>
             </a>
         </div>
         <div class="col-3">
             <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='invalid')}" class="index-stat" th:classappend="${state=='invalid' ? 'active' : ''}"
                title="Entries that were never succesfully verified to be FAIR Data Point.">
-                <div class="number" th:text="${countInvalid}"></div>
+                <div class="number" th:text="${countInvalid}" id="invalidEntries"></div>
                 <div class="explanation">Invalid</div>
             </a>
         </div>
@@ -41,18 +41,18 @@
         <tr>
             <th>
                 <span class="heading">Endpoint</span>
-                <a class="sort-link sort-link-asc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='clientUrl,asc')}" th:classappend="${sort == 'clientUrl,asc' ? 'active' : ''}">&#9650;</a>
-                <a class="sort-link sort-link-desc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='clientUrl,desc')}" th:classappend="${sort == 'clientUrl,desc' ? 'active' : ''}">&#9660;</a>
+                <a class="sort-link sort-link-asc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='clientUrl,asc',state=${state})}" th:classappend="${sort == 'clientUrl,asc' ? 'active' : ''}">&#9650;</a>
+                <a class="sort-link sort-link-desc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='clientUrl,desc',state=${state})}" th:classappend="${sort == 'clientUrl,desc' ? 'active' : ''}">&#9660;</a>
             </th>
             <th class="right">
                 <span class="heading">Registration</span>
-                <a class="sort-link sort-link-asc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='registrationTime,asc')}" th:classappend="${sort == 'registrationTime,asc' ? 'active' : ''}">&#9650;</a>
-                <a class="sort-link sort-link-desc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='registrationTime,desc')}" th:classappend="${sort == 'registrationTime,desc' ? 'active' : ''}">&#9660;</a>
+                <a class="sort-link sort-link-asc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='registrationTime,asc',state=${state})}" th:classappend="${sort == 'registrationTime,asc' ? 'active' : ''}">&#9650;</a>
+                <a class="sort-link sort-link-desc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='registrationTime,desc',state=${state})}" th:classappend="${sort == 'registrationTime,desc' ? 'active' : ''}">&#9660;</a>
             </th>
             <th class="right">
                 <span class="heading">Modification</span>
-                <a class="sort-link sort-link-asc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='modificationTime,asc')}" th:classappend="${sort == 'modificationTime,asc' ? 'active' : ''}">&#9650;</a>
-                <a class="sort-link sort-link-desc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='modificationTime,desc')}" th:classappend="${sort == 'modificationTime,desc' ? 'active' : ''}">&#9660;</a>
+                <a class="sort-link sort-link-asc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='modificationTime,asc',state=${state})}" th:classappend="${sort == 'modificationTime,asc' ? 'active' : ''}">&#9650;</a>
+                <a class="sort-link sort-link-desc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='modificationTime,desc',state=${state})}" th:classappend="${sort == 'modificationTime,desc' ? 'active' : ''}">&#9660;</a>
             </th>
             <th>
 
@@ -102,11 +102,11 @@
         <nav class="float-md-right">
             <ul class="pagination col-sm">
                 <li class="page-item" id="firstPage" th:classAppend="${entries.number > 0 ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{'/'(page=1,size=${entries.size},sort=${sort})}" th:if="${entries.number > 0}">&#171;</a>
+                    <a class="page-link" th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state=${state})}" th:if="${entries.number > 0}">&#171;</a>
                     <span class="page-link" th:if="${entries.number <= 0}">&#171;</span>
                 </li>
                 <li class="page-item" id="previousPage" th:classAppend="${entries.number > 0 ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{'/'(page=${entries.number},size=${entries.size},sort=${sort})}"
+                    <a class="page-link" th:href="@{'/'(page=${entries.number},size=${entries.size},sort=${sort},state=${state})}"
                        th:if="${entries.number > 0}">&#8249;</a>
                     <span class="page-link" th:if="${entries.number <= 0}">&#8249;</span>
                 </li>
@@ -118,13 +118,13 @@
                 </li>
                 <li class="page-item" id="nextPage"
                     th:classAppend="${entries.number < (entries.totalPages - 1) ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{'/'(page=${entries.number + 2},size=${entries.size},sort=${sort})}"
+                    <a class="page-link" th:href="@{'/'(page=${entries.number + 2},size=${entries.size},sort=${sort},state=${state})}"
                        th:if="${entries.number < (entries.totalPages - 1)}">&#8250;</a>
                     <span class="page-link" th:if="${entries.number >= (entries.totalPages - 1)}">&#8250;</span>
                 </li>
                 <li class="page-item" id="lastPage"
                     th:classAppend="${entries.number < (entries.totalPages - 1) ? '' : 'disabled'}">
-                    <a class="page-link" th:href="@{'/'(page=${entries.totalPages},size=${entries.size},sort=${sort})}"
+                    <a class="page-link" th:href="@{'/'(page=${entries.totalPages},size=${entries.size},sort=${sort},state=${state})}"
                        th:if="${entries.number < (entries.totalPages - 1)}">&#187;</a>
                     <span class="page-link" th:if="${entries.number >= (entries.totalPages - 1)}">&#187;</span>
                 </li>
