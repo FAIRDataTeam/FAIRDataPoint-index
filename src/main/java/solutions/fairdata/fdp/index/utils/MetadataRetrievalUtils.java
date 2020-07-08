@@ -25,8 +25,10 @@ package solutions.fairdata.fdp.index.utils;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.vocabulary.DCTERMS;
+import org.eclipse.rdf4j.model.vocabulary.FOAF;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParser;
@@ -60,10 +62,14 @@ public class MetadataRetrievalUtils {
 
     private static final IRI REPOSITORY = SimpleValueFactory.getInstance().createIRI("http://www.re3data.org/schema/3-0#Repository");
 
+    private static final IRI COUNTRY = SimpleValueFactory.getInstance().createIRI("http://www.re3data.org/schema/3-0#institutionCountry");
+
     private static final Map<IRI, String> MAPPING = Map.of(
             DCTERMS.TITLE, "title",
             DCTERMS.DESCRIPTION, "description",
-            DCTERMS.HAS_VERSION, "version"
+            DCTERMS.HAS_VERSION, "version",
+            DCTERMS.PUBLISHER, "publisher",
+            COUNTRY, "country"
     );
 
     private static final HttpClient client = HttpClient.newBuilder()
@@ -131,10 +137,24 @@ public class MetadataRetrievalUtils {
         repositoryMetadata.setMetadataVersion(VERSION);
         repositoryMetadata.setRepositoryUri(repository.toString());
 
+        Value publisher = null;
         for (Statement st: statements) {
             if (st.getSubject().equals(repository)) {
                 if (MAPPING.containsKey(st.getPredicate())) {
                     repositoryMetadata.getMetadata().put(MAPPING.get(st.getPredicate()), st.getObject().stringValue());
+                }
+                if (st.getPredicate().equals(DCTERMS.PUBLISHER)) {
+                    publisher = st.getObject();
+                }
+            }
+        }
+
+        if (publisher != null) {
+            for (Statement st: statements) {
+                if (st.getSubject().equals(publisher)) {
+                    if (st.getPredicate().equals(FOAF.NAME)) {
+                        repositoryMetadata.getMetadata().put("publisherName", st.getObject().stringValue());
+                    }
                 }
             }
         }

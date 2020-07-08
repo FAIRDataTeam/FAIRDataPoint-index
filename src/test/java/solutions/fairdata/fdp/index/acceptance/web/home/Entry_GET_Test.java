@@ -9,14 +9,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.util.UriComponentsBuilder;
 import solutions.fairdata.fdp.index.WebIntegrationTest;
-import solutions.fairdata.fdp.index.database.repository.EventRepository;
 import solutions.fairdata.fdp.index.database.repository.IndexEntryRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.entity.config.EventsConfig;
 import solutions.fairdata.fdp.index.fixtures.IndexEntryFixtures;
 
 import java.net.URI;
-import java.time.Duration;
 import java.time.Instant;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

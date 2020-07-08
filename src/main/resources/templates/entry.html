@@ -63,13 +63,26 @@
                     <th>Repository URI</th>
                     <td id="repository-uri"><a th:href="${entry.get().currentMetadata.repositoryUri}" th:text="${entry.get().currentMetadata.repositoryUri}" target="_blank"></a></td>
                 </tr>
-                <tr th:each="key : ${basicMetadata}" th:if="${entry.get().currentMetadata.metadata.containsKey(key)}">
-                    <th th:text="${#strings.capitalize(key)}"></th>
-                    <td th:text="${entry.get().currentMetadata.metadata.get(key)}" th:id="${'metadata-' + key}"></td>
+                <tr th:if="${entry.get().currentMetadata.metadata.containsKey('title')}">
+                    <th>Title</th>
+                    <td th:text="${entry.get().currentMetadata.metadata.get('title')}" th:id="metadata-title"></td>
                 </tr>
-                <tr th:each="info : ${entry.get().currentMetadata.metadata}" th:if="${!basicMetadata.contains(info.key)}">
+                <tr th:if="${entry.get().currentMetadata.metadata.containsKey('version')}">
+                    <th>Version</th>
+                    <td th:text="${entry.get().currentMetadata.metadata.get('version')}" th:id="metadata-title"></td>
+                </tr>
+                <tr  th:if="${entry.get().currentMetadata.metadata.containsKey('publisher') && entry.get().currentMetadata.metadata.containsKey('publisherName')}">
+                    <th>Publisher</th>
+                    <td id="metadata-publisher">
+                        <a th:href="${entry.get().currentMetadata.metadata.get(publisher)}" target="_blank" th:text="${entry.get().currentMetadata.metadata.get('publisherName')}"></a>
+                    </td>
+                </tr>
+                <tr th:each="info : ${entry.get().currentMetadata.metadata}" th:if="${!specialMetadata.contains(info.key)}">
                     <th th:text="${#strings.capitalize(info.key)}"></th>
-                    <td th:text="${info.value}" th:id="${'metadata-' + info.key}"></td>
+                    <td th:text="${info.value}" th:id="${'metadata-' + info.key}" th:if="${!uriMetadata.contains(info.key)}"></td>
+                    <td th:id="${'metadata-' + info.key}" th:if="${uriMetadata.contains(info.key)}">
+                        <a th:href="${info.value}" th:text="${info.value}" target="_blank"></a>
+                    </td>
                 </tr>
                 </tbody>
             </table>

@@ -52,7 +52,8 @@ public class EntryController {
         model.addAttribute("entry", indexEntryService.findEntry(clientUrl));
         model.addAttribute("events", eventService.getEvents(clientUrl));
         model.addAttribute("pingValidDuration", eventsConfig.getPingValidDuration());
-        model.addAttribute("basicMetadata", List.of("title", "version"));
+        model.addAttribute("specialMetadata", List.of("title", "version", "publisher", "publisherName"));
+        model.addAttribute("uriMetadata", List.of("country"));
         return "entry";
     }
 }
