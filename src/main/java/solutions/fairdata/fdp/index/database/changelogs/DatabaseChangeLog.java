@@ -30,6 +30,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
+import solutions.fairdata.fdp.index.entity.IndexEntryState;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -58,5 +59,14 @@ public class DatabaseChangeLog {
                     )
             );
         }
+    }
+
+    @ChangeSet(order = "002", id = "addIndexEntryState", author = "MarekSuchanek")
+    public void addIndexEntryState(MongoDatabase db) {
+        MongoCollection<Document> indexEntries = db.getCollection("indexEntry");
+        indexEntries.updateMany(
+                Filters.exists("state", false),
+                Updates.set("state", IndexEntryState.Unknown.toString())
+        );
     }
 }

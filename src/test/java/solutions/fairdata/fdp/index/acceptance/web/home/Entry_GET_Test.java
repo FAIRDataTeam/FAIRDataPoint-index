@@ -1,3 +1,25 @@
+/**
+ * The MIT License
+ * Copyright © 2020 https://fairdata.solutions
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package solutions.fairdata.fdp.index.acceptance.web.home;
 
 import org.junit.jupiter.api.DisplayName;
@@ -65,7 +87,7 @@ public class Entry_GET_Test extends WebIntegrationTest {
     public void res200_reachableEntry() throws Exception {
         // GIVEN (prepare data)
         mongoTemplate.getDb().drop();
-        IndexEntry indexEntry = IndexEntryFixtures.reachableEntry("http://example.com");
+        IndexEntry indexEntry = IndexEntryFixtures.activeEntry("http://example.com");
         indexEntryRepository.save(indexEntry);
 
         // AND (prepare request)
@@ -80,7 +102,7 @@ public class Entry_GET_Test extends WebIntegrationTest {
         result
                 .andExpect(status().isOk())
                 .andExpect(view().name("entry"))
-                .andExpect(xpath("//div[@class='entry-label']/a").string("Reachable"))
+                .andExpect(xpath("//div[@class='entry-label']/a").string("Active"))
                 .andExpect(xpath("//div[@class='entry-label']/a/@href").string(indexEntry.getClientUrl()))
                 .andExpect(xpath("//h2[@class='entry-title']/a").string(indexEntry.getClientUrl()))
                 .andExpect(xpath("//h2[@class='entry-title']/a/@href").string(indexEntry.getClientUrl()))
@@ -98,7 +120,7 @@ public class Entry_GET_Test extends WebIntegrationTest {
     public void res200_unreachableEntry() throws Exception {
         // GIVEN (prepare data)
         mongoTemplate.getDb().drop();
-        IndexEntry indexEntry = IndexEntryFixtures.reachableEntry("http://example.com");
+        IndexEntry indexEntry = IndexEntryFixtures.activeEntry("http://example.com");
         Instant oldDate = Instant.now().minus(eventsConfig.getPingValidDuration());
         indexEntry.setRegistrationTime(oldDate);
         indexEntry.setModificationTime(oldDate);
@@ -117,7 +139,7 @@ public class Entry_GET_Test extends WebIntegrationTest {
         result
                 .andExpect(status().isOk())
                 .andExpect(view().name("entry"))
-                .andExpect(xpath("//div[@class='entry-label']/span").string("Unreachable"))
+                .andExpect(xpath("//div[@class='entry-label']/span").string("Inactive"))
                 .andExpect(xpath("//h2[@class='entry-title']/a").string(indexEntry.getClientUrl()))
                 .andExpect(xpath("//h2[@class='entry-title']/a/@href").string(indexEntry.getClientUrl()))
                 .andExpect(xpath("//div[@id='entryEmpty']").doesNotExist())

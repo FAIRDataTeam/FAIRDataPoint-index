@@ -20,25 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.database.repository;
+package solutions.fairdata.fdp.index.entity;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import solutions.fairdata.fdp.index.entity.IndexEntry;
-import solutions.fairdata.fdp.index.entity.IndexEntryState;
-
-import java.time.Instant;
-import java.util.Optional;
-
-public interface IndexEntryRepository extends MongoRepository<IndexEntry, String> {
-    Optional<IndexEntry> findByClientUrl(String clientUrl);
-
-    Page<IndexEntry> findAllByStateEquals(Pageable pageable, IndexEntryState state);
-    Page<IndexEntry> findAllByStateEqualsAndLastRetrievalTimeBefore(Pageable pageable, IndexEntryState state, Instant when);
-    Page<IndexEntry> findAllByStateEqualsAndLastRetrievalTimeAfter(Pageable pageable, IndexEntryState state, Instant when);
-
-    long countAllByStateEquals(IndexEntryState state);
-    long countAllByStateEqualsAndLastRetrievalTimeAfter(IndexEntryState state, Instant when);
-    long countAllByStateEqualsAndLastRetrievalTimeBefore(IndexEntryState state, Instant when);
+public enum IndexEntryState {
+    Unknown,
+    Valid, // Active / Inactive based on timestamps
+    Unreachable,
+    Invalid
 }

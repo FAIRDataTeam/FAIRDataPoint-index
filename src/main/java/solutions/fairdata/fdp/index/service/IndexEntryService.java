@@ -33,6 +33,7 @@ import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
 import solutions.fairdata.fdp.index.api.dto.PingDTO;
 import solutions.fairdata.fdp.index.database.repository.IndexEntryRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
+import solutions.fairdata.fdp.index.entity.IndexEntryState;
 import solutions.fairdata.fdp.index.entity.config.EventsConfig;
 
 import javax.validation.Valid;
@@ -75,14 +76,20 @@ public class IndexEntryService {
     }
 
     public Page<IndexEntry> getEntriesPage(Pageable pageable, String state) {
-        if (state.equalsIgnoreCase("reachable")) {
-            return repository.findAllByLastRetrievalTimeAfter(pageable, getValidTreshold());
+        if (state.equalsIgnoreCase("active")) {
+            return repository.findAllByStateEqualsAndLastRetrievalTimeAfter(pageable, IndexEntryState.Valid, getValidThreshold());
+        }
+        if (state.equalsIgnoreCase("inactive")) {
+            return repository.findAllByStateEqualsAndLastRetrievalTimeBefore(pageable, IndexEntryState.Valid, getValidThreshold());
         }
         if (state.equalsIgnoreCase("unreachable")) {
-            return repository.findAllByLastRetrievalTimeBefore(pageable, getValidTreshold());
+            return repository.findAllByStateEquals(pageable, IndexEntryState.Unreachable);
         }
         if (state.equalsIgnoreCase("invalid")) {
-            return repository.findAllByLastRetrievalTimeIsNull(pageable);
+            return repository.findAllByStateEquals(pageable, IndexEntryState.Invalid);
+        }
+        if (state.equalsIgnoreCase("unknown")) {
+            return repository.findAllByStateEquals(pageable, IndexEntryState.Unknown);
         }
         return repository.findAll(pageable);
     }
@@ -94,6 +101,7 @@ public class IndexEntryService {
     public IndexEntryDTO toDTO(IndexEntry indexEntry) {
         IndexEntryDTO dto = new IndexEntryDTO();
         dto.setClientUrl(indexEntry.getClientUrl());
+        dto.setState(indexEntry.getState().toString());
         dto.setRegistrationTime(indexEntry.getRegistrationTime().toString());
         dto.setModificationTime(indexEntry.getModificationTime().toString());
         return dto;
@@ -103,15 +111,28 @@ public class IndexEntryService {
         return repository.count();
     }
 
-    public long countInvalidEntries() {
-        return repository.countAllByLastRetrievalTimeIsNull();
-    }
-
     public long countUnreachableEntries() {
-        return repository.countAllByLastRetrievalTimeBefore(getValidTreshold());
+        return repository.countAllByStateEquals(IndexEntryState.Unreachable);
     }
 
-    private Instant getValidTreshold() {
+    public long countActiveEntries() {
+        return repository.countAllByStateEqualsAndLastRetrievalTimeAfter(IndexEntryState.Valid, getValidThreshold());
+    }
+
+    public long countInactiveEntries() {
+        return repository.countAllByStateEqualsAndLastRetrievalTimeBefore(IndexEntryState.Valid, getValidThreshold());
+    }
+
+    public long countInvalidEntries() {
+        return repository.countAllByStateEquals(IndexEntryState.Invalid);
+    }
+
+    public long countUnknownEntries() {
+        return repository.countAllByStateEquals(IndexEntryState.Unknown);
+    }
+
+    private Instant getValidThreshold() {
         return Instant.now().minus(eventsConfig.getPingValidDuration());
     }
+
 }

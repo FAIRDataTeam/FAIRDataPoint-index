@@ -6,33 +6,32 @@
 <head></head>
 <body>
 <section layout:fragment="content">
-    <div class="row index-stats">
-        <div class="col-3">
-            <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='all')}" class="index-stat" th:classappend="${state=='all' ? 'active' : ''}"
-               title="All indexed records regardless its state.">
-                <div class="number" th:text="${countAll}" id="totalEntries"></div>
-                <div class="explanation">Indexed</div>
+    <div class="table-filter">
+        <div class="filter-name">Filter:</div>
+        <div class="filter-content">
+            <a class="btn btn-outline-primary" th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='all')}" th:classappend="${state=='all' ? 'active' : ''}"
+               data-toggle="tooltip" data-placement="bottom" title="All indexed entries">
+                All <span class="badge badge-light" th:text="${countAll}"></span>
             </a>
-        </div>
-        <div class="col-3">
-            <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='reachable')}" class="index-stat" th:classappend="${state=='reachable' ? 'active' : ''}"
-               title="FAIR Data Points that regularly send PING and are verified.">
-                <div class="number" th:text="${countAll - countUnreachable - countInvalid}" id="reachableEntries"></div>
-                <div class="explanation">Reachable</div>
+            <a class="btn btn-outline-success" th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='active')}" th:classappend="${state=='active' ? 'active' : ''}"
+               data-toggle="tooltip" data-placement="bottom" title="FAIR Data Points that regularly send ping and are verified">
+                Active <span class="badge badge-light" th:text="${countActive}"></span>
             </a>
-        </div>
-        <div class="col-3">
-            <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='unreachable')}" class="index-stat" th:classappend="${state=='unreachable' ? 'active' : ''}"
-               title="FAIR Data Points that were verified in the past but we did not receive PING for a longer time.">
-                <div class="number" th:text="${countUnreachable}" id="unreachableEntries"></div>
-                <div class="explanation">Unreachable</div>
+            <a class="btn btn-outline-dark" th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='inactive')}" th:classappend="${state=='inactive' ? 'active' : ''}"
+               data-toggle="tooltip" data-placement="bottom" title="FAIR Data Points that did not send ping for longer time">
+                Inactive <span class="badge badge-light" th:text="${countInactive}"></span>
             </a>
-        </div>
-        <div class="col-3">
-            <a th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='invalid')}" class="index-stat" th:classappend="${state=='invalid' ? 'active' : ''}"
-               title="Entries that were never succesfully verified to be FAIR Data Point.">
-                <div class="number" th:text="${countInvalid}" id="invalidEntries"></div>
-                <div class="explanation">Invalid</div>
+            <a class="btn btn-outline-warning" th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='unreachable')}" th:classappend="${state=='unreachable' ? 'active' : ''}"
+               data-toggle="tooltip" data-placement="bottom" title="Entries that could not be reached (firewall, local network, etc.)">
+                Unreachable <span class="badge badge-light" th:text="${countUnreachable}"></span>
+            </a>
+            <a class="btn btn-outline-danger" th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='invalid')}" th:classappend="${state=='invalid' ? 'active' : ''}"
+               data-toggle="tooltip" data-placement="bottom" title="Entries that are verified to be FAIR Data Points">
+                Invalid <span class="badge badge-light" th:text="${countInvalid}"></span>
+            </a>
+            <a class="btn btn-outline-info" th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='unknown')}" th:classappend="${state=='unknown' ? 'active' : ''}"
+               data-toggle="tooltip" data-placement="bottom" title="Entries that are not yet tested">
+                Unknown <span class="badge badge-light" th:text="${countUnknown}"></span>
             </a>
         </div>
     </div>
@@ -54,23 +53,28 @@
                 <a class="sort-link sort-link-asc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='modificationTime,asc',state=${state})}" th:classappend="${sort == 'modificationTime,asc' ? 'active' : ''}">&#9650;</a>
                 <a class="sort-link sort-link-desc" th:href="@{'/'(page=${entries.number},size=${entries.size},sort='modificationTime,desc',state=${state})}" th:classappend="${sort == 'modificationTime,desc' ? 'active' : ''}">&#9660;</a>
             </th>
-            <th>
-
+            <th class="right">
+                <span class="heading">Status</span>
             </th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="entry : ${entries}">
+        <tr th:each="entry : ${entries}" class="entry-row">
             <td class="endpoint">
                 <a th:href="@{'/entry'(clientUrl=${entry.clientUrl})}" th:text="${entry.clientUrl}"></a>
             </td>
             <td class="timestamp" th:text="${entry.registrationTime}"></td>
             <td class="timestamp" th:text="${entry.modificationTime}"></td>
             <td class="right">
-                <a th:if="${entry.currentMetadata != null && entry.lastRetrievalAgo < deprecatedDuration}" th:href="${entry.clientUrl}" target="_blank" class="badge badge-success" title="Metadata about repository have been retrieved">Reachable</a>
-                <span th:if="${entry.currentMetadata != null && entry.lastRetrievalAgo >= deprecatedDuration}" class="badge badge-warning" title="This FAIR Data Point does not seem to be working anymore">Unreachable</span>
-                <span th:if="${entry.currentMetadata == null}" class="badge badge-danger" title="Metadata about FAIR Data Point could not be retrieved">Invalid</span>
+                <a th:if="${entry.state == IndexEntryState.Valid && entry.lastRetrievalAgo < pingValidDuration}" th:href="${entry.clientUrl}" target="_blank" class="badge badge-success" data-toggle="tooltip" data-placement="bottom" title="FAIR Data Point sends pings regularly and is valid">Active</a>
+                <span th:if="${entry.state == IndexEntryState.Valid && entry.lastRetrievalAgo >= pingValidDuration}" class="badge badge-secondary" data-toggle="tooltip" data-placement="bottom" title="This FAIR Data Point does not seem to be working anymore">Inactive</span>
+                <span th:if="${entry.state == IndexEntryState.Unreachable}" class="badge badge-warning" data-toggle="tooltip" data-placement="bottom" title="Entry was not reachable over network when checking">Unreachable</span>
+                <span th:if="${entry.state == IndexEntryState.Invalid}" class="badge badge-danger" data-toggle="tooltip" data-placement="bottom" title="Entry does not seem to be a FAIR Data Point">Invalid</span>
+                <span th:if="${entry.state == IndexEntryState.Unknown}" class="badge badge-info" data-toggle="tooltip" data-placement="bottom" title="Validity check has not been performed yet">Unknown</span>
             </td>
+        </tr>
+        <tr th:if="${entries.numberOfElements == 0}">
+            <td class="empty-table-info" colspan="4">no entries to display</td>
         </tr>
         </tbody>
     </table>
@@ -132,6 +136,7 @@
         </nav>
     </div>
     <div class="clearfix"></div>
+    <script th:src="@{/js/common.js}"></script>
     <script th:src="@{/js/localize-timestamps.js}"></script>
 </section>
 </body>

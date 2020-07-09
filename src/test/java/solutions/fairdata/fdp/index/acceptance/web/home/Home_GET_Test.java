@@ -36,6 +36,7 @@ import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.fixtures.IndexEntryFixtures;
 
 import java.net.URI;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -83,8 +84,7 @@ public class Home_GET_Test extends WebIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("home"))
                 .andExpect(xpath("//table[@id='entries']/thead/tr").exists())
-                .andExpect(xpath("//table[@id='entries']/tbody/tr").doesNotExist())
-                .andExpect(xpath("//*[@id='totalEntries']").string("0"))
+                .andExpect(xpath("//table[@id='entries']/tbody/tr[@class='entry-row']").doesNotExist())
                 .andExpect(xpath("//*[@id='currentPage']").string("1"))
                 .andExpect(xpath("//*[@id='totalPages']").string("1"))
                 .andExpect(xpath("//*[@id='firstPage']/a").doesNotExist())
@@ -117,7 +117,6 @@ public class Home_GET_Test extends WebIntegrationTest {
                 .andExpect(xpath("//table[@id='entries']/tbody/tr").nodeCount(entries.size()))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get(0).getClientUrl()))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string("/entry?clientUrl=" + entries.get(0).getClientUrl()))
-                .andExpect(xpath("//*[@id='totalEntries']").string(String.valueOf(entries.size())))
                 .andExpect(xpath("//*[@id='currentPage']").string("1"))
                 .andExpect(xpath("//*[@id='totalPages']").string("1"))
                 .andExpect(xpath("//*[@id='firstPage']/a").doesNotExist())
@@ -152,7 +151,6 @@ public class Home_GET_Test extends WebIntegrationTest {
                 .andExpect(xpath("//table[@id='entries']/tbody/tr").nodeCount(size))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get(0).getClientUrl()))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string("/entry?clientUrl=" + entries.get(0).getClientUrl()))
-                .andExpect(xpath("//*[@id='totalEntries']").string(String.valueOf(items)))
                 .andExpect(xpath("//*[@id='currentPage']").string("1"))
                 .andExpect(xpath("//*[@id='totalPages']").string("7"))
                 .andExpect(xpath("//*[@id='firstPage']/a").doesNotExist())
@@ -188,7 +186,6 @@ public class Home_GET_Test extends WebIntegrationTest {
                 .andExpect(xpath("//table[@id='entries']/tbody/tr").nodeCount(33))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get((page - 1) * size).getClientUrl()))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string("/entry?clientUrl=" + entries.get((page - 1) * size).getClientUrl()))
-                .andExpect(xpath("//*[@id='totalEntries']").string(String.valueOf(items)))
                 .andExpect(xpath("//*[@id='currentPage']").string(String.valueOf(page)))
                 .andExpect(xpath("//*[@id='totalPages']").string(String.valueOf(page)))
                 .andExpect(xpath("//*[@id='firstPage']/a").exists())
@@ -224,7 +221,6 @@ public class Home_GET_Test extends WebIntegrationTest {
                 .andExpect(xpath("//table[@id='entries']/tbody/tr").nodeCount(size))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a").string(entries.get((page - 1) * size).getClientUrl()))
                 .andExpect(xpath("//table[@id='entries']/tbody/tr[1]/td[@class='endpoint']/a/@href").string("/entry?clientUrl=" + entries.get((page - 1) * size).getClientUrl()))
-                .andExpect(xpath("//*[@id='totalEntries']").string(String.valueOf(items)))
                 .andExpect(xpath("//*[@id='currentPage']").string(String.valueOf(page)))
                 .andExpect(xpath("//*[@id='totalPages']").string(String.valueOf(7)))
                 .andExpect(xpath("//*[@id='firstPage']/a").exists())

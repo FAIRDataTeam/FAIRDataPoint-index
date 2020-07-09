@@ -38,6 +38,7 @@ import solutions.fairdata.fdp.index.api.dto.PingDTO;
 import solutions.fairdata.fdp.index.database.repository.EventRepository;
 import solutions.fairdata.fdp.index.database.repository.IndexEntryRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
+import solutions.fairdata.fdp.index.entity.IndexEntryState;
 import solutions.fairdata.fdp.index.entity.config.EventsConfig;
 import solutions.fairdata.fdp.index.entity.events.Event;
 import solutions.fairdata.fdp.index.entity.http.Exchange;
@@ -122,17 +123,21 @@ public class EventService {
                     if (metadata.isPresent()) {
                         event.getMetadataRetrieval().setMetadata(metadata.get());
                         event.getRelatedTo().setCurrentMetadata(metadata.get());
+                        event.getRelatedTo().setState(IndexEntryState.Valid);
                         logger.info("Storing metadata for " + clientUrl);
                         indexEntryRepository.save(event.getRelatedTo());
                     } else {
                         logger.info("Repository not found in metadata for " + clientUrl);
+                        event.getRelatedTo().setState(IndexEntryState.Invalid);
                         event.getMetadataRetrieval().setError("Repository not found in metadata");
                     }
                 } catch (Exception e) {
                     logger.info("Cannot parse metadata for " + clientUrl);
+                    event.getRelatedTo().setState(IndexEntryState.Invalid);
                     event.getMetadataRetrieval().setError("Cannot parse metadata");
                 }
             } else {
+                event.getRelatedTo().setState(IndexEntryState.Unreachable);
                 logger.info("Cannot retrieve metadata for " + clientUrl + ": " + ex.getError());
             }
         } else {

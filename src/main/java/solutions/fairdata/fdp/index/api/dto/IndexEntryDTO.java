@@ -36,6 +36,9 @@ public class IndexEntryDTO {
     private String clientUrl;
 
     @NotNull
+    private String state;
+
+    @NotNull
     private String registrationTime;
 
     @NotNull

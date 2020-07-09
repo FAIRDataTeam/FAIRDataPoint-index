@@ -140,3 +140,21 @@ a.index-stat.active {
   border-bottom: 1px solid #ccc;
   margin-bottom: 0.3em;
 }
+
+.table-filter {
+  display: flex;
+  align-items: center;
+  margin: 0.5em 0.75rem 1em 0.75rem;
+}
+.table-filter .filter-name {
+  font-weight: bold;
+}
+.table-filter .filter-content {
+  flex-grow: 1;
+  text-align: right;
+}
+
+td.empty-table-info {
+  text-align: center;
+  font-style: italic;
+}

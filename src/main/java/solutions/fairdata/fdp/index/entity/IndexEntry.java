@@ -39,6 +39,7 @@ public class IndexEntry {
     protected ObjectId id;
     @Indexed(unique=true)
     private String clientUrl;
+    private IndexEntryState state = IndexEntryState.Unknown;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Instant registrationTime;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

@@ -28,6 +28,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import solutions.fairdata.fdp.index.entity.IndexEntryState;
 import solutions.fairdata.fdp.index.entity.config.EventsConfig;
 import solutions.fairdata.fdp.index.service.EventService;
 import solutions.fairdata.fdp.index.service.IndexEntryService;
@@ -51,6 +52,7 @@ public class EntryController {
         model.addAttribute("clientUrl", clientUrl);
         model.addAttribute("entry", indexEntryService.findEntry(clientUrl));
         model.addAttribute("events", eventService.getEvents(clientUrl));
+        model.addAttribute("IndexEntryState", IndexEntryState.class);
         model.addAttribute("pingValidDuration", eventsConfig.getPingValidDuration());
         model.addAttribute("specialMetadata", List.of("title", "version", "publisher", "publisherName"));
         model.addAttribute("uriMetadata", List.of("country"));

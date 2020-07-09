@@ -31,6 +31,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import solutions.fairdata.fdp.index.entity.IndexEntryState;
 import solutions.fairdata.fdp.index.entity.config.EventsConfig;
 import solutions.fairdata.fdp.index.service.IndexEntryService;
 
@@ -51,10 +52,16 @@ public class HomeController {
             .orElse("");
 
         model.addAttribute("entries", indexEntryService.getEntriesPage(pageable, state));
-        model.addAttribute("deprecatedDuration", eventsConfig.getPingValidDuration());
+        model.addAttribute("pingValidDuration", eventsConfig.getPingValidDuration());
+        model.addAttribute("IndexEntryState", IndexEntryState.class);
+
         model.addAttribute("countAll", indexEntryService.countAllEntries());
+        model.addAttribute("countActive", indexEntryService.countActiveEntries());
+        model.addAttribute("countInactive", indexEntryService.countInactiveEntries());
         model.addAttribute("countUnreachable", indexEntryService.countUnreachableEntries());
         model.addAttribute("countInvalid", indexEntryService.countInvalidEntries());
+        model.addAttribute("countUnknown", indexEntryService.countUnknownEntries());
+
         model.addAttribute("sort", sort);
         model.addAttribute("state", state);
         return "home";

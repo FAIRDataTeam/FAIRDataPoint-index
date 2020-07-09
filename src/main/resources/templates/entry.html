@@ -8,19 +8,21 @@
 <section layout:fragment="content">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a th:href="@{'/'}">FAIR Data Point Index</a></li>
+            <li class="breadcrumb-item"><a th:href="@{'/'}">FAIR Data Point index</a></li>
             <li class="breadcrumb-item active" aria-current="page" th:text="${clientUrl}"></li>
         </ol>
     </nav>
 
     <div th:if="${entry.isPresent()}" class="entry-label">
-        <a th:if="${entry.get().currentMetadata != null && entry.get().lastRetrievalAgo < pingValidDuration}" th:href="${clientUrl}" target="_blank" class="badge badge-success" title="Metadata about repository have been retrieved">Reachable</a>
-        <span th:if="${entry.get().currentMetadata != null && entry.get().lastRetrievalAgo >= pingValidDuration}" class="badge badge-warning" title="This FAIR Data Point does not seem to be working anymore">Unreachable</span>
-        <span th:if="${entry.get().currentMetadata == null}" class="badge badge-danger" title="Metadata about FAIR Data Point could not be retrieved">Invalid</span>
+        <a th:if="${entry.get().state == IndexEntryState.Valid && entry.get().lastRetrievalAgo < pingValidDuration}" th:href="${entry.get().clientUrl}" target="_blank" class="badge badge-success" title="Metadata about repository have been retrieved.">Active</a>
+        <span th:if="${entry.get().state == IndexEntryState.Valid && entry.get().lastRetrievalAgo >= pingValidDuration}" class="badge badge-secondary" title="This FAIR Data Point does not seem to be working anymore.">Inactive</span>
+        <span th:if="${entry.get().state == IndexEntryState.Unreachable}" class="badge badge-warning" title="Metadata about FAIR Data Point could not be retrieved.">Unreachable</span>
+        <span th:if="${entry.get().state == IndexEntryState.Invalid}" class="badge badge-danger" title="Metadata about FAIR Data Point could not be retrieved.">Invalid</span>
+        <span th:if="${entry.get().state == IndexEntryState.Unknown}" class="badge badge-info" title="Validity check has not been performed yet.">Unknown</span>
     </div>
 
     <div th:if="${entry.isEmpty()}" class="entry-label">
-        <span class="badge badge-info" title="Metadata about FAIR Data Point could not be retrieved">Not found</span>
+        <span class="badge badge-danger" title="Metadata about FAIR Data Point could not be retrieved">Not found</span>
     </div>
 
     <h2 class="entry-title">FDP <a target="_blank" th:href="${clientUrl}" th:text="${clientUrl}"></a></h2>
@@ -69,7 +71,7 @@
                 </tr>
                 <tr th:if="${entry.get().currentMetadata.metadata.containsKey('version')}">
                     <th>Version</th>
-                    <td th:text="${entry.get().currentMetadata.metadata.get('version')}" th:id="metadata-title"></td>
+                    <td th:text="${entry.get().currentMetadata.metadata.get('version')}" th:id="metadata-version"></td>
                 </tr>
                 <tr  th:if="${entry.get().currentMetadata.metadata.containsKey('publisher') && entry.get().currentMetadata.metadata.containsKey('publisherName')}">
                     <th>Publisher</th>
