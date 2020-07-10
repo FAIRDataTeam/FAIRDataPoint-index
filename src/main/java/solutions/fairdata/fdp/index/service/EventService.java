@@ -41,6 +41,7 @@ import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.entity.IndexEntryState;
 import solutions.fairdata.fdp.index.entity.config.EventsConfig;
 import solutions.fairdata.fdp.index.entity.events.Event;
+import solutions.fairdata.fdp.index.entity.events.EventType;
 import solutions.fairdata.fdp.index.entity.http.Exchange;
 import solutions.fairdata.fdp.index.entity.http.ExchangeState;
 import solutions.fairdata.fdp.index.exceptions.IncorrectPingFormatException;
@@ -154,14 +155,27 @@ public class EventService {
     public void triggerMetadataRetrieval(Event triggerEvent) {
         var event = MetadataRetrievalUtils.prepareEvent(triggerEvent);
         logger.info("Triggering metadata retrieval for " + triggerEvent.getRelatedTo().getClientUrl());
-        processMetadataRetrieval(event);
+        try {
+            processMetadataRetrieval(event);
+        } catch (Exception e) {
+            logger.error("Failed to retrieve metadata: " + e.getMessage());
+        }
     }
 
     private void resumeUnfinishedEvents() {
         logger.info("Resuming unfinished events");
         for (Event event : eventRepository.getAllByFinishedIsNull()) {
             logger.info("Resuming event " + event.getUuid());
-            processMetadataRetrieval(event);
+
+            try {
+                if (event.getType() == EventType.MetadataRetrieval) {
+                    processMetadataRetrieval(event);
+                } else {
+                    logger.warn("Unknown event type " + event.getUuid());
+                }
+            } catch (Exception e) {
+                logger.error("Failed to resume event " + event.getUuid() + ": " + e.getMessage());
+            }
         }
         logger.info("Finished unfinished events");
     }
