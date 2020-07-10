@@ -76,7 +76,7 @@
                 <tr  th:if="${entry.get().currentMetadata.metadata.containsKey('publisher') && entry.get().currentMetadata.metadata.containsKey('publisherName')}">
                     <th>Publisher</th>
                     <td id="metadata-publisher">
-                        <a th:href="${entry.get().currentMetadata.metadata.get(publisher)}" target="_blank" th:text="${entry.get().currentMetadata.metadata.get('publisherName')}"></a>
+                        <a th:href="${entry.get().currentMetadata.metadata.get('publisher')}" target="_blank" th:text="${entry.get().currentMetadata.metadata.get('publisherName')}"></a>
                     </td>
                 </tr>
                 <tr th:each="info : ${entry.get().currentMetadata.metadata}" th:if="${!specialMetadata.contains(info.key)}">
