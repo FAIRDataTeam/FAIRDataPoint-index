@@ -45,6 +45,7 @@ import solutions.fairdata.fdp.index.entity.events.EventType;
 import solutions.fairdata.fdp.index.entity.http.Exchange;
 import solutions.fairdata.fdp.index.entity.http.ExchangeState;
 import solutions.fairdata.fdp.index.exceptions.IncorrectPingFormatException;
+import solutions.fairdata.fdp.index.exceptions.RateLimitException;
 import solutions.fairdata.fdp.index.utils.IncomingPingUtils;
 import solutions.fairdata.fdp.index.utils.MetadataRetrievalUtils;
 
@@ -85,6 +86,17 @@ public class EventService {
 
     @SneakyThrows
     public Event acceptIncomingPing(HttpEntity<String> httpEntity, HttpServletRequest request) {
+        var remoteAddr = request.getRemoteAddr();
+        var rateLimitSince = Instant.now().minus(eventsConfig.getPingRateLimitDuration());
+        var previousPings = eventRepository.findAllByIncomingPingExchangeRemoteAddrAndCreatedAfter(remoteAddr, rateLimitSince);
+        if (previousPings.size() > eventsConfig.getPingRateLimitHits()) {
+            logger.warn("Rate limit for PING reached by: " + remoteAddr);
+            throw new RateLimitException(String.format(
+                    "Rate limit reached for %s (max. %d per %s) - PING ignored",
+                    remoteAddr, eventsConfig.getPingRateLimitHits(), eventsConfig.getPingRateLimitDuration().toString())
+            );
+        }
+
         var event = IncomingPingUtils.prepareEvent(httpEntity, request);
         eventRepository.save(event);
         event.execute();

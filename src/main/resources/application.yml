@@ -19,7 +19,10 @@ spring:
         max-size: 5
         queue-capacity: 5000
       thread-name-prefix: fdpindex-task-
-
+springdoc:
+  swagger-ui:
+    supportedSubmitMethods:
+      - "get"
 fdp-index:
   api:
     #    url:
@@ -32,4 +35,6 @@ fdp-index:
       rateLimitWait: PT10M # 10 minutes (ISO 8601)
       timeout: PT1M # 1 minute (ISO 8601)
     ping:
-      validDuration: PT1M # 7 days (ISO 8601)
+      validDuration: P7D # 7 days (ISO 8601)
+      rateLimitDuration: PT6H
+      rateLimitHits: 10

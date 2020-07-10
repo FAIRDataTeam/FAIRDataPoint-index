@@ -28,9 +28,14 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.entity.events.Event;
 
+import java.time.Instant;
+import java.util.List;
+
 public interface EventRepository extends MongoRepository<Event, String> {
 
     Iterable<Event> getAllByFinishedIsNull();
 
     Page<Event> getAllByRelatedTo(IndexEntry indexEntry, Pageable pageable);
+
+    List<Event> findAllByIncomingPingExchangeRemoteAddrAndCreatedAfter(String remoteAddr, Instant after);
 }
