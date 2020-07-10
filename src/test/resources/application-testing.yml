@@ -2,3 +2,17 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/fdp-index-test
+
+fdp-index:
+  api:
+    #    url:
+    title: FAIR Data Point Index API
+    description: This is OpenAPI specification of FAIR Data Point Index REST API.
+    contactUrl: https://github.com/FAIRDataTeam/FAIRDataPoint-index
+    contactName: GitHub repository
+  events:
+    retrieval:
+      rateLimitWait: PT10M # 10 minutes (ISO 8601)
+      timeout: PT1M # 1 minute (ISO 8601)
+    ping:
+      validDuration: P7D # 7 days (ISO 8601)

@@ -27,12 +27,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import solutions.fairdata.fdp.index.api.dto.PingDTO;
-import solutions.fairdata.fdp.index.service.IndexEntryService;
+import solutions.fairdata.fdp.index.entity.events.Event;
+import solutions.fairdata.fdp.index.exceptions.IncorrectPingFormatException;
+import solutions.fairdata.fdp.index.service.EventService;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 
 @Tag(name = "Ping")
 @RestController
@@ -41,14 +43,15 @@ public class PingController {
     private static final Logger logger = LoggerFactory.getLogger(PingController.class);
 
     @Autowired
-    private IndexEntryService service;
+    private EventService eventService;
 
     @Operation(hidden = true)
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void receivePing(@RequestBody @Valid PingDTO ping) {
-        logger.info("Received ping from {}", ping);
-
-        service.storeEntry(ping.getClientUrl());
+    public void receivePing(HttpEntity<String> httpEntity, HttpServletRequest request) throws IncorrectPingFormatException {
+        logger.info("Received ping from {}", request.getRemoteAddr());
+        final Event incomingPingEvent = eventService.acceptIncomingPing(httpEntity, request);
+        logger.info("Triggering metadata retrieval for {}", incomingPingEvent.getRelatedTo().getClientUrl());
+        eventService.triggerMetadataRetrieval(incomingPingEvent);
     }
 }

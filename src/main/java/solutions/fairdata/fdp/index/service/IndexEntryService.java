@@ -27,23 +27,34 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
-import solutions.fairdata.fdp.index.database.repository.EntryRepository;
+import solutions.fairdata.fdp.index.api.dto.PingDTO;
+import solutions.fairdata.fdp.index.database.repository.IndexEntryRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
+import solutions.fairdata.fdp.index.entity.IndexEntryState;
+import solutions.fairdata.fdp.index.entity.config.EventsConfig;
 
-import java.time.OffsetDateTime;
+import javax.validation.Valid;
+import java.time.Instant;
+import java.util.Optional;
 
-@Component
+@Service
+@Validated
 public class IndexEntryService {
     private static final Logger logger = LoggerFactory.getLogger(IndexEntryService.class);
 
     @Autowired
-    private EntryRepository repository;
+    private IndexEntryRepository repository;
 
-    public void storeEntry(String clientUrl) {
+    @Autowired
+    private EventsConfig eventsConfig;
+
+    public IndexEntry storeEntry(@Valid PingDTO pingDTO) {
+        var clientUrl = pingDTO.getClientUrl();
         var entity = repository.findByClientUrl(clientUrl);
-        var now = OffsetDateTime.now();
+        var now = Instant.now();
 
         final IndexEntry entry;
         if (entity.isPresent()) {
@@ -53,26 +64,75 @@ public class IndexEntryService {
             logger.info("Storing new entry {}", clientUrl);
             entry = new IndexEntry();
             entry.setClientUrl(clientUrl);
-            entry.setRegistrationTime(now.toString());
+            entry.setRegistrationTime(now);
         }
 
-        entry.setModificationTime(now.toString());
-        repository.save(entry);
+        entry.setModificationTime(now);
+        return repository.save(entry);
     }
 
     public Iterable<IndexEntry> getAllEntries() {
         return repository.findAll();
     }
 
-    public Page<IndexEntry> getEntriesPage(Pageable pageable) {
+    public Page<IndexEntry> getEntriesPage(Pageable pageable, String state) {
+        if (state.equalsIgnoreCase("active")) {
+            return repository.findAllByStateEqualsAndLastRetrievalTimeAfter(pageable, IndexEntryState.Valid, getValidThreshold());
+        }
+        if (state.equalsIgnoreCase("inactive")) {
+            return repository.findAllByStateEqualsAndLastRetrievalTimeBefore(pageable, IndexEntryState.Valid, getValidThreshold());
+        }
+        if (state.equalsIgnoreCase("unreachable")) {
+            return repository.findAllByStateEquals(pageable, IndexEntryState.Unreachable);
+        }
+        if (state.equalsIgnoreCase("invalid")) {
+            return repository.findAllByStateEquals(pageable, IndexEntryState.Invalid);
+        }
+        if (state.equalsIgnoreCase("unknown")) {
+            return repository.findAllByStateEquals(pageable, IndexEntryState.Unknown);
+        }
         return repository.findAll(pageable);
+    }
+
+    public Optional<IndexEntry> findEntry(String clientUrl) {
+        return repository.findByClientUrl(clientUrl);
     }
 
     public IndexEntryDTO toDTO(IndexEntry indexEntry) {
         IndexEntryDTO dto = new IndexEntryDTO();
         dto.setClientUrl(indexEntry.getClientUrl());
-        dto.setRegistrationTime(OffsetDateTime.parse(indexEntry.getRegistrationTime()));
-        dto.setModificationTime(OffsetDateTime.parse(indexEntry.getModificationTime()));
+        dto.setState(indexEntry.getState().toString());
+        dto.setRegistrationTime(indexEntry.getRegistrationTime().toString());
+        dto.setModificationTime(indexEntry.getModificationTime().toString());
         return dto;
     }
+
+    public long countAllEntries() {
+        return repository.count();
+    }
+
+    public long countUnreachableEntries() {
+        return repository.countAllByStateEquals(IndexEntryState.Unreachable);
+    }
+
+    public long countActiveEntries() {
+        return repository.countAllByStateEqualsAndLastRetrievalTimeAfter(IndexEntryState.Valid, getValidThreshold());
+    }
+
+    public long countInactiveEntries() {
+        return repository.countAllByStateEqualsAndLastRetrievalTimeBefore(IndexEntryState.Valid, getValidThreshold());
+    }
+
+    public long countInvalidEntries() {
+        return repository.countAllByStateEquals(IndexEntryState.Invalid);
+    }
+
+    public long countUnknownEntries() {
+        return repository.countAllByStateEquals(IndexEntryState.Unknown);
+    }
+
+    private Instant getValidThreshold() {
+        return Instant.now().minus(eventsConfig.getPingValidDuration());
+    }
+
 }

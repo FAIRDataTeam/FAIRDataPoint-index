@@ -24,12 +24,49 @@ package solutions.fairdata.fdp.index.database.changelogs;
 
 import com.github.mongobee.changeset.ChangeLog;
 import com.github.mongobee.changeset.ChangeSet;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import org.bson.Document;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
+import solutions.fairdata.fdp.index.entity.IndexEntryState;
+
+import java.time.Instant;
+import java.time.OffsetDateTime;
 
 @ChangeLog
 public class DatabaseChangeLog {
     @ChangeSet(order = "000", id = "initMongoDB", author = "MarekSuchanek")
     public void initMongoDB(MongoDatabase db) {
         // Nothing to DO, just "first" making the version
+    }
+
+    @ChangeSet(order = "001", id = "entryTimestampsToInstant", author = "MarekSuchanek")
+    public void entryTimestampsToInstant(MongoDatabase db) {
+        MongoCollection<Document> indexEntries = db.getCollection("indexEntry");
+        for (Document indexEntry : indexEntries.find()) {
+            if (!(indexEntry.get("registrationTime") instanceof String)) continue;
+            String registrationTimeStr = indexEntry.getString("registrationTime");
+            Instant registrationTimeDate = OffsetDateTime.parse(registrationTimeStr).toInstant();
+            String modificationTimeStr = indexEntry.getString("modificationTime");
+            Instant modificationTimeDate = OffsetDateTime.parse(modificationTimeStr).toInstant();
+            indexEntries.updateOne(
+                    Filters.eq("_id", indexEntry.getObjectId("_id")),
+                    Updates.combine(
+                            Updates.set("registrationTime", registrationTimeDate),
+                            Updates.set("modificationTime", modificationTimeDate)
+                    )
+            );
+        }
+    }
+
+    @ChangeSet(order = "002", id = "addIndexEntryState", author = "MarekSuchanek")
+    public void addIndexEntryState(MongoDatabase db) {
+        MongoCollection<Document> indexEntries = db.getCollection("indexEntry");
+        indexEntries.updateMany(
+                Filters.exists("state", false),
+                Updates.set("state", IndexEntryState.Unknown.toString())
+        );
     }
 }

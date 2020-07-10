@@ -22,11 +22,15 @@
  */
 package solutions.fairdata.fdp.index.database.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
+import solutions.fairdata.fdp.index.entity.events.Event;
 
-import java.util.Optional;
+public interface EventRepository extends MongoRepository<Event, String> {
 
-public interface EntryRepository extends MongoRepository<IndexEntry, String> {
-    Optional<IndexEntry> findByClientUrl(String clientUrl);
+    Iterable<Event> getAllByFinishedIsNull();
+
+    Page<Event> getAllByRelatedTo(IndexEntry indexEntry, Pageable pageable);
 }

@@ -20,38 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity;
+package solutions.fairdata.fdp.index.entity.http;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.NoArgsConstructor;
 
-import java.time.Duration;
-import java.time.Instant;
+import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Map;
 
-@Document
 @Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    @Indexed(unique=true)
-    private String clientUrl;
-    private IndexEntryState state = IndexEntryState.Unknown;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant registrationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant modificationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant lastRetrievalTime;
-    private RepositoryMetadata currentMetadata;
+@NoArgsConstructor
+@AllArgsConstructor
+public class Response {
+    private Integer code;
+    private String url;
+    private String origin;
 
-    public Duration getLastRetrievalAgo() {
-        if (lastRetrievalTime == null) {
-            return null;
-        }
-        return Duration.between(lastRetrievalTime, Instant.now());
+    private Map<String, List<String>> headers;
+    private String body;
+
+    public void setFromHttpResponse(HttpResponse<String> response) {
+        code = response.statusCode();
+        url = response.uri().toString();
+        headers = response.headers().map();
+        body = response.body();
     }
 }
