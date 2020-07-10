@@ -20,19 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity.config;
+package solutions.fairdata.fdp.index.exceptions;
 
-import lombok.Builder;
-import lombok.Data;
+import org.springframework.http.HttpStatus;
 
-import java.time.Duration;
+public class RateLimitException extends IndexException {
 
-@Builder
-@Data
-public class EventsConfig {
-    private final Duration retrievalRateLimitWait;
-    private final Duration retrievalTimeout;
-    private final Duration pingValidDuration;
-    private final Duration pingRateLimitDuration;
-    private final int pingRateLimitHits;
+    public RateLimitException(String message) {
+        super(message, HttpStatus.TOO_MANY_REQUESTS);
+    }
 }

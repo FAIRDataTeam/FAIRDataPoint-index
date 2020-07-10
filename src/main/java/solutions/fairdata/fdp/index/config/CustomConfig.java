@@ -39,12 +39,16 @@ public class CustomConfig {
     public EventsConfig eventsConfig(
             @Value("${fdp-index.events.retrieval.rateLimitWait:PT10M}") String cfgRetrievalRateLimitWait,
             @Value("${fdp-index.events.retrieval.timeout:PT1M}") String cfgRetrievalTimeout,
-            @Value("${fdp-index.events.ping.validDuration:P7D}") String cfgPingValidDuration
+            @Value("${fdp-index.events.ping.validDuration:P7D}") String cfgPingValidDuration,
+            @Value("${fdp-index.events.ping.rateLimitDuration:PT6H}") String cfgPingRateLimitDuration,
+            @Value("${fdp-index.events.ping.rateLimitHits:10}") int cfgPingRateLimitHits
     ) {
         return EventsConfig.builder()
                 .retrievalRateLimitWait(Duration.parse(cfgRetrievalRateLimitWait))
                 .retrievalTimeout(Duration.parse(cfgRetrievalTimeout))
                 .pingValidDuration(Duration.parse(cfgPingValidDuration))
+                .pingRateLimitDuration(Duration.parse(cfgPingRateLimitDuration))
+                .pingRateLimitHits(cfgPingRateLimitHits)
                 .build();
     }
 }
