@@ -45,7 +45,7 @@ public class HomeController {
     private EventsConfig eventsConfig;
 
     @GetMapping
-    public String home(Model model, @SortDefault(sort = "modificationTime", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(defaultValue = "reachable") String state) {
+    public String home(Model model, @SortDefault(sort = "modificationTime", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(defaultValue = "active") String state) {
         var sort = pageable.getSort().stream()
             .findFirst()
             .map(o -> o.getProperty() + "," + o.getDirection().name().toLowerCase())
