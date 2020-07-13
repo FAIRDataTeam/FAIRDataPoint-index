@@ -35,7 +35,7 @@
 
     <groupId>solutions.fairdata</groupId>
     <artifactId>fairdatapoint-index</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.0</version>
 
     <inceptionYear>2020</inceptionYear>
 
@@ -78,11 +78,6 @@
             <version>${mongobee.version}</version>
         </dependency>
         <!-- rdf4j -->
-        <dependency>
-            <groupId>org.eclipse.rdf4j</groupId>
-            <artifactId>rdf4j-query</artifactId>
-            <version>${rdf4j.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-rio-api</artifactId>

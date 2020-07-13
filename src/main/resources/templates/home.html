@@ -26,7 +26,7 @@
                 Unreachable <span class="badge badge-light" th:text="${countUnreachable}"></span>
             </a>
             <a class="btn btn-outline-danger" th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='invalid')}" th:classappend="${state=='invalid' ? 'active' : ''}"
-               data-toggle="tooltip" data-placement="bottom" title="Entries that are verified to be FAIR Data Points">
+               data-toggle="tooltip" data-placement="bottom" title="Entries that are not verified to be FAIR Data Points">
                 Invalid <span class="badge badge-light" th:text="${countInvalid}"></span>
             </a>
             <a class="btn btn-outline-info" th:href="@{'/'(page=1,size=${entries.size},sort=${sort},state='unknown')}" th:classappend="${state=='unknown' ? 'active' : ''}"
