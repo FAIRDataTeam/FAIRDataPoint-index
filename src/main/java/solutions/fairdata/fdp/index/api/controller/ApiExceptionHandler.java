@@ -20,38 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity;
+package solutions.fairdata.fdp.index.api.controller;
 
-import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import solutions.fairdata.fdp.index.api.dto.ErrorDTO;
+import solutions.fairdata.fdp.index.exceptions.IndexException;
 
-import java.time.Duration;
-import java.time.Instant;
+@ControllerAdvice
+public class ApiExceptionHandler {
 
-@Document
-@Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    @Indexed(unique=true)
-    private String clientUrl;
-    private IndexEntryState state = IndexEntryState.Unknown;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant registrationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant modificationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant lastRetrievalTime;
-    private RepositoryMetadata currentMetadata;
-
-    public Duration getLastRetrievalAgo() {
-        if (lastRetrievalTime == null) {
-            return null;
-        }
-        return Duration.between(lastRetrievalTime, Instant.now());
+    @ExceptionHandler(IndexException.class)
+    public ResponseEntity<ErrorDTO> handleIndexException(IndexException exception) {
+        return new ResponseEntity<>(exception.getErrorDTO(), exception.getStatus());
     }
 }

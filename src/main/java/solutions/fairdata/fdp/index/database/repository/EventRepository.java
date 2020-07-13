@@ -20,38 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity;
+package solutions.fairdata.fdp.index.database.repository;
 
-import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
+import solutions.fairdata.fdp.index.entity.events.Event;
 
-import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
-@Document
-@Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    @Indexed(unique=true)
-    private String clientUrl;
-    private IndexEntryState state = IndexEntryState.Unknown;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant registrationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant modificationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant lastRetrievalTime;
-    private RepositoryMetadata currentMetadata;
+public interface EventRepository extends MongoRepository<Event, String> {
 
-    public Duration getLastRetrievalAgo() {
-        if (lastRetrievalTime == null) {
-            return null;
-        }
-        return Duration.between(lastRetrievalTime, Instant.now());
-    }
+    Iterable<Event> getAllByFinishedIsNull();
+
+    Page<Event> getAllByRelatedTo(IndexEntry indexEntry, Pageable pageable);
+
+    List<Event> findAllByIncomingPingExchangeRemoteAddrAndCreatedAfter(String remoteAddr, Instant after);
 }

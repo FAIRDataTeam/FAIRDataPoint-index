@@ -28,6 +28,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
 import solutions.fairdata.fdp.index.service.IndexEntryService;
@@ -45,8 +46,8 @@ public class EntriesController {
     private IndexEntryService service;
 
     @GetMapping("")
-    public Page<IndexEntryDTO> getEntriesPage(Pageable pageable) {
-        return service.getEntriesPage(pageable).map(service::toDTO);
+    public Page<IndexEntryDTO> getEntriesPage(Pageable pageable, @RequestParam(defaultValue = "all") String state) {
+        return service.getEntriesPage(pageable, state).map(service::toDTO);
     }
 
     @GetMapping("/all")

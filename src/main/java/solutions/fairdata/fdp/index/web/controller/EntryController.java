@@ -23,9 +23,6 @@
 package solutions.fairdata.fdp.index.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,37 +30,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import solutions.fairdata.fdp.index.entity.IndexEntryState;
 import solutions.fairdata.fdp.index.entity.config.EventsConfig;
+import solutions.fairdata.fdp.index.service.EventService;
 import solutions.fairdata.fdp.index.service.IndexEntryService;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/")
-public class HomeController {
+@RequestMapping("/entry")
+public class EntryController {
     @Autowired
     private IndexEntryService indexEntryService;
+
+    @Autowired
+    private EventService eventService;
 
     @Autowired
     private EventsConfig eventsConfig;
 
     @GetMapping
-    public String home(Model model, @SortDefault(sort = "modificationTime", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(defaultValue = "active") String state) {
-        var sort = pageable.getSort().stream()
-            .findFirst()
-            .map(o -> o.getProperty() + "," + o.getDirection().name().toLowerCase())
-            .orElse("");
-
-        model.addAttribute("entries", indexEntryService.getEntriesPage(pageable, state));
-        model.addAttribute("pingValidDuration", eventsConfig.getPingValidDuration());
+    public String home(Model model, @RequestParam String clientUrl) {
+        model.addAttribute("clientUrl", clientUrl);
+        model.addAttribute("entry", indexEntryService.findEntry(clientUrl));
+        model.addAttribute("events", eventService.getEvents(clientUrl));
         model.addAttribute("IndexEntryState", IndexEntryState.class);
-
-        model.addAttribute("countAll", indexEntryService.countAllEntries());
-        model.addAttribute("countActive", indexEntryService.countActiveEntries());
-        model.addAttribute("countInactive", indexEntryService.countInactiveEntries());
-        model.addAttribute("countUnreachable", indexEntryService.countUnreachableEntries());
-        model.addAttribute("countInvalid", indexEntryService.countInvalidEntries());
-        model.addAttribute("countUnknown", indexEntryService.countUnknownEntries());
-
-        model.addAttribute("sort", sort);
-        model.addAttribute("state", state);
-        return "home";
+        model.addAttribute("pingValidDuration", eventsConfig.getPingValidDuration());
+        model.addAttribute("specialMetadata", List.of("title", "version", "publisher", "publisherName"));
+        model.addAttribute("uriMetadata", List.of("country"));
+        return "entry";
     }
 }

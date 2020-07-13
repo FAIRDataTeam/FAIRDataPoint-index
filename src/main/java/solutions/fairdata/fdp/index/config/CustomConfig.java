@@ -22,32 +22,33 @@
  */
 package solutions.fairdata.fdp.index.config;
 
-import com.github.mongobee.Mongobee;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.data.mongodb.config.EnableMongoAuditing;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.context.annotation.Scope;
+import solutions.fairdata.fdp.index.entity.config.EventsConfig;
+
+import java.time.Duration;
 
 @Configuration
-@EnableMongoAuditing
-@EnableMongoRepositories(basePackages = {"solutions.fairdata.fdp.index"})
-public class StorageConfig {
-
-    @Value("${spring.data.mongodb.uri}")
-    private String mongoUri;
-
-    @Autowired
-    private Environment environment;
+public class CustomConfig {
 
     @Bean
-    public Mongobee mongobee() throws Exception {
-        Mongobee runner = new Mongobee(mongoUri);
-        runner.setChangeLogsScanPackage("solutions.fairdata.fdp.index.database.changelogs");
-        runner.setSpringEnvironment(environment);
-        runner.execute();
-        return runner;
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public EventsConfig eventsConfig(
+            @Value("${fdp-index.events.retrieval.rateLimitWait:PT10M}") String cfgRetrievalRateLimitWait,
+            @Value("${fdp-index.events.retrieval.timeout:PT1M}") String cfgRetrievalTimeout,
+            @Value("${fdp-index.events.ping.validDuration:P7D}") String cfgPingValidDuration,
+            @Value("${fdp-index.events.ping.rateLimitDuration:PT6H}") String cfgPingRateLimitDuration,
+            @Value("${fdp-index.events.ping.rateLimitHits:10}") int cfgPingRateLimitHits
+    ) {
+        return EventsConfig.builder()
+                .retrievalRateLimitWait(Duration.parse(cfgRetrievalRateLimitWait))
+                .retrievalTimeout(Duration.parse(cfgRetrievalTimeout))
+                .pingValidDuration(Duration.parse(cfgPingValidDuration))
+                .pingRateLimitDuration(Duration.parse(cfgPingRateLimitDuration))
+                .pingRateLimitHits(cfgPingRateLimitHits)
+                .build();
     }
 }

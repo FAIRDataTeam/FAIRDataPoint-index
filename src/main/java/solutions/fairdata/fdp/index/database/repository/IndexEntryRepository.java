@@ -20,38 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity;
+package solutions.fairdata.fdp.index.database.repository;
 
-import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import solutions.fairdata.fdp.index.entity.IndexEntry;
+import solutions.fairdata.fdp.index.entity.IndexEntryState;
 
-import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
 
-@Document
-@Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    @Indexed(unique=true)
-    private String clientUrl;
-    private IndexEntryState state = IndexEntryState.Unknown;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant registrationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant modificationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant lastRetrievalTime;
-    private RepositoryMetadata currentMetadata;
+public interface IndexEntryRepository extends MongoRepository<IndexEntry, String> {
+    Optional<IndexEntry> findByClientUrl(String clientUrl);
 
-    public Duration getLastRetrievalAgo() {
-        if (lastRetrievalTime == null) {
-            return null;
-        }
-        return Duration.between(lastRetrievalTime, Instant.now());
-    }
+    Page<IndexEntry> findAllByStateEquals(Pageable pageable, IndexEntryState state);
+    Page<IndexEntry> findAllByStateEqualsAndLastRetrievalTimeBefore(Pageable pageable, IndexEntryState state, Instant when);
+    Page<IndexEntry> findAllByStateEqualsAndLastRetrievalTimeAfter(Pageable pageable, IndexEntryState state, Instant when);
+
+    long countAllByStateEquals(IndexEntryState state);
+    long countAllByStateEqualsAndLastRetrievalTimeAfter(IndexEntryState state, Instant when);
+    long countAllByStateEqualsAndLastRetrievalTimeBefore(IndexEntryState state, Instant when);
 }

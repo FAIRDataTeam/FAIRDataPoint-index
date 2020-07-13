@@ -33,7 +33,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import solutions.fairdata.fdp.index.WebIntegrationTest;
 import solutions.fairdata.fdp.index.api.dto.IndexEntryDTO;
-import solutions.fairdata.fdp.index.database.repository.EntryRepository;
+import solutions.fairdata.fdp.index.database.repository.IndexEntryRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.fixtures.IndexEntryFixtures;
 
@@ -49,7 +49,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 public class EntriesAll_GET_Test extends WebIntegrationTest {
 
     @Autowired
-    private EntryRepository entryRepository;
+    private IndexEntryRepository indexEntryRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
 
@@ -86,7 +86,7 @@ public class EntriesAll_GET_Test extends WebIntegrationTest {
         // GIVEN (prepare data)
         mongoTemplate.getDb().drop();
         List<IndexEntry> entries = IndexEntryFixtures.entriesFew();
-        entryRepository.saveAll(entries);
+        indexEntryRepository.saveAll(entries);
 
         // AND (prepare request)
         RequestEntity<?> request = RequestEntity
@@ -112,7 +112,7 @@ public class EntriesAll_GET_Test extends WebIntegrationTest {
         // GIVEN (prepare data)
         mongoTemplate.getDb().drop();
         List<IndexEntry> entries = IndexEntryFixtures.entriesN(300);
-        entryRepository.saveAll(entries);
+        indexEntryRepository.saveAll(entries);
 
         // AND (prepare request)
         RequestEntity<?> request = RequestEntity

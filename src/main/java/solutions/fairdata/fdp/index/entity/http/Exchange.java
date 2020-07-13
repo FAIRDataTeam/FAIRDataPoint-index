@@ -20,38 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity;
+package solutions.fairdata.fdp.index.entity.http;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.NoArgsConstructor;
 
-import java.time.Duration;
-import java.time.Instant;
-
-@Document
 @Data
-public class IndexEntry {
-    @Id
-    protected ObjectId id;
-    @Indexed(unique=true)
-    private String clientUrl;
-    private IndexEntryState state = IndexEntryState.Unknown;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant registrationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant modificationTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Instant lastRetrievalTime;
-    private RepositoryMetadata currentMetadata;
+@NoArgsConstructor
+@AllArgsConstructor
+public class Exchange {
+    private ExchangeDirection direction;
+    private ExchangeState state = ExchangeState.Prepared;
+    private String remoteAddr;
+    private String error;
 
-    public Duration getLastRetrievalAgo() {
-        if (lastRetrievalTime == null) {
-            return null;
-        }
-        return Duration.between(lastRetrievalTime, Instant.now());
+    private Request request = new Request();
+    private Response response = new Response();
+
+    public Exchange(ExchangeDirection direction, String remoteAddr) {
+        this.direction = direction;
+        this.remoteAddr = remoteAddr;
+    }
+
+    public Exchange(ExchangeDirection direction) {
+        this.direction = direction;
     }
 }

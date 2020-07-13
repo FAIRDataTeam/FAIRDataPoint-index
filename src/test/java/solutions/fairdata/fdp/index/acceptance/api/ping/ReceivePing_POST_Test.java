@@ -33,7 +33,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import solutions.fairdata.fdp.index.WebIntegrationTest;
 import solutions.fairdata.fdp.index.api.dto.PingDTO;
-import solutions.fairdata.fdp.index.database.repository.EntryRepository;
+import solutions.fairdata.fdp.index.database.repository.IndexEntryRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.fixtures.IndexEntryFixtures;
 
@@ -48,7 +48,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class ReceivePing_POST_Test extends WebIntegrationTest {
 
     @Autowired
-    private EntryRepository entryRepository;
+    private IndexEntryRepository indexEntryRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
 
@@ -79,12 +79,12 @@ public class ReceivePing_POST_Test extends WebIntegrationTest {
                 .body(reqDto);
 
         // WHEN
-        assertThat("Entry does not exist before the ping", entryRepository.findByClientUrl(clientUrl).isPresent(), is(Boolean.FALSE));
+        assertThat("Entry does not exist before the ping", indexEntryRepository.findByClientUrl(clientUrl).isPresent(), is(Boolean.FALSE));
         ResponseEntity<Void> result = client.exchange(request, responseType);
 
         // THEN
         assertThat("Correct response code is received", result.getStatusCode(), is(equalTo(HttpStatus.NO_CONTENT)));
-        assertThat("Entry exists after the ping", entryRepository.findByClientUrl(clientUrl).isPresent(), is(Boolean.TRUE));
+        assertThat("Entry exists after the ping", indexEntryRepository.findByClientUrl(clientUrl).isPresent(), is(Boolean.TRUE));
     }
 
     @Test
@@ -103,13 +103,13 @@ public class ReceivePing_POST_Test extends WebIntegrationTest {
                 .body(reqDto);
 
         // WHEN
-        entryRepository.save(indexEntry);
-        assertThat("Entry exists before the ping", entryRepository.findByClientUrl(clientUrl).isPresent(), is(Boolean.TRUE));
+        indexEntryRepository.save(indexEntry);
+        assertThat("Entry exists before the ping", indexEntryRepository.findByClientUrl(clientUrl).isPresent(), is(Boolean.TRUE));
         ResponseEntity<Void> result = client.exchange(request, responseType);
 
         // THEN
         assertThat("Correct response code is received", result.getStatusCode(), is(equalTo(HttpStatus.NO_CONTENT)));
-        assertThat("Entry exists after the ping", entryRepository.findByClientUrl(clientUrl).isPresent(), is(Boolean.TRUE));
+        assertThat("Entry exists after the ping", indexEntryRepository.findByClientUrl(clientUrl).isPresent(), is(Boolean.TRUE));
     }
 
     @Test

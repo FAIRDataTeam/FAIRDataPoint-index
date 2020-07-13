@@ -27,7 +27,6 @@ import lombok.Data;
 import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.NotNull;
-import java.time.OffsetDateTime;
 
 @Data
 @Schema(name = "Entry")
@@ -37,8 +36,11 @@ public class IndexEntryDTO {
     private String clientUrl;
 
     @NotNull
-    private OffsetDateTime registrationTime;
+    private String state;
 
     @NotNull
-    private OffsetDateTime modificationTime;
+    private String registrationTime;
+
+    @NotNull
+    private String modificationTime;
 }

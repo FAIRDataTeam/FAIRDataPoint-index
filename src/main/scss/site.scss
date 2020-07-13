@@ -51,13 +51,18 @@ footer div.container {
   padding: 2rem;
 }
 
-table.entries td.endpoint {
+table td.endpoint {
   overflow-wrap: anywhere;
 }
 
-table.entries td.timestamp,
-table.entries th.right {
+table td.timestamp,
+table th.right,
+table td.right {
   text-align: right;
+}
+
+td, th {
+  max-width: 20em;
 }
 
 a.sort-link:hover {
@@ -72,4 +77,84 @@ a.sort-link {
 a.sort-link.active {
   color: $primary;
   text-decoration: none;
+}
+
+div.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2em;
+}
+
+div.error > .error-img {
+  vertical-align: middle;
+  max-width: 30%;
+}
+
+div.error > .error-text {
+  margin: 1em;
+  max-width: 50%;
+}
+
+h2.entry-title {
+  margin: 1em 0;
+}
+div.entry-block {
+  margin-top: 1em;
+  padding-bottom: 0.5em;
+  border-top: 1px solid lightgray;
+  padding-top: 1.5em;
+}
+div.entry-block .table {
+  margin: 0;
+}
+div.entry-label {
+  float: right;
+}
+
+
+.index-stats {
+  margin-bottom: 1em;
+}
+
+a.index-stat {
+  margin: 1em;
+  padding: 1em;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+  text-align: center;
+  display: block;
+  color: black;
+  text-decoration: none;
+  border: 3px solid $secondary;
+}
+
+a.index-stat.active {
+  border: 3px solid $primary;
+}
+
+.index-stat .number {
+  font-weight: bold;
+  font-size: 140%;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 0.3em;
+}
+
+.table-filter {
+  display: flex;
+  align-items: center;
+  margin: 0.5em 0.75rem 1em 0.75rem;
+}
+.table-filter .filter-name {
+  font-weight: bold;
+}
+.table-filter .filter-content {
+  flex-grow: 1;
+  text-align: right;
+}
+
+td.empty-table-info {
+  text-align: center;
+  font-style: italic;
 }
