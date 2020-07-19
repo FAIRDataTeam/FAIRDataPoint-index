@@ -20,10 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity.events;
+package solutions.fairdata.fdp.index.utils;
 
-public enum EventType {
-    AdminTrigger,
-    MetadataRetrieval,
-    IncomingPing;
+import org.springframework.security.core.Authentication;
+import solutions.fairdata.fdp.index.entity.events.AdminTrigger;
+import solutions.fairdata.fdp.index.entity.events.Event;
+
+import javax.servlet.http.HttpServletRequest;
+
+public class AdminTriggerUtils {
+
+    private static final Integer VERSION = 1;
+
+    public static Event prepareEvent(HttpServletRequest request, Authentication authentication, String clientUrl) {
+        var adminTrigger = new AdminTrigger();
+        adminTrigger.setRemoteAddr(request.getRemoteAddr());
+        adminTrigger.setTokenName(authentication.getName());
+        adminTrigger.setClientUrl(clientUrl);
+        return new Event(VERSION, adminTrigger);
+    }
 }

@@ -42,6 +42,7 @@ import solutions.fairdata.fdp.index.entity.events.MetadataRetrieval;
 import solutions.fairdata.fdp.index.entity.http.Exchange;
 import solutions.fairdata.fdp.index.entity.http.ExchangeDirection;
 import solutions.fairdata.fdp.index.entity.http.ExchangeState;
+import solutions.fairdata.fdp.index.service.IndexEntryService;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -52,7 +53,9 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Optional;
 
 public class MetadataRetrievalUtils {
 
@@ -88,8 +91,20 @@ public class MetadataRetrievalUtils {
         return Duration.between(lastRetrieval, Instant.now()).compareTo(rateLimitWait) > 0;
     }
 
-    public static Event prepareEvent(Event triggerEvent) {
-        return new Event(VERSION, triggerEvent, triggerEvent.getRelatedTo(), new MetadataRetrieval());
+    public static Iterable<Event> prepareEvents(Event triggerEvent, IndexEntryService indexEntryService) {
+        ArrayList<Event> events = new ArrayList<>();
+        if (triggerEvent.getType() == EventType.IncomingPing) {
+            events.add(new Event(VERSION, triggerEvent, triggerEvent.getRelatedTo(), new MetadataRetrieval()));
+        } else if (triggerEvent.getType() == EventType.AdminTrigger) {
+            if (triggerEvent.getAdminTrigger().getClientUrl() == null) {
+                indexEntryService.getAllEntries().forEach(
+                        entry -> events.add(new Event(VERSION, triggerEvent, entry, new MetadataRetrieval()))
+                );
+            } else {
+                events.add(new Event(VERSION, triggerEvent, triggerEvent.getRelatedTo(), new MetadataRetrieval()));
+            }
+        }
+        return events;
     }
 
     public static void retrieveRepositoryMetadata(Event event, Duration timeout) {

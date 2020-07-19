@@ -20,10 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity.events;
+package solutions.fairdata.fdp.index.database.repository;
 
-public enum EventType {
-    AdminTrigger,
-    MetadataRetrieval,
-    IncomingPing;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import solutions.fairdata.fdp.index.entity.Token;
+
+import java.util.Optional;
+
+public interface TokenRepository extends MongoRepository<Token, String> {
+    Optional<Token> findByToken(String token);
 }

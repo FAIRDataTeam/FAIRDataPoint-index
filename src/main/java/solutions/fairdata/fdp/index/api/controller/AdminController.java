@@ -20,25 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.exceptions;
+package solutions.fairdata.fdp.index.api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import solutions.fairdata.fdp.index.api.dto.ErrorDTO;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import solutions.fairdata.fdp.index.entity.events.Event;
+import solutions.fairdata.fdp.index.service.EventService;
 
-public abstract class IndexException extends RuntimeException {
+import javax.servlet.http.HttpServletRequest;
 
-    protected final HttpStatus status;
+@RestController
+@RequestMapping("/admin")
+public class AdminController {
+    private static final Logger logger = LoggerFactory.getLogger(PingController.class);
 
-    public IndexException(String message, HttpStatus status) {
-        super(message);
-        this.status = status;
-    }
+    @Autowired
+    private EventService eventService;
 
-    public HttpStatus getStatus() {
-        return status;
-    }
-
-    public ErrorDTO getErrorDTO() {
-        return new ErrorDTO(getStatus().value(), getMessage());
+    @Operation(hidden = true)
+    @PostMapping("/trigger")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void triggerMetadataRetrieveOne(@RequestParam(required = false) String clientUrl, HttpServletRequest request) {
+        logger.info("Received ping from {}", request.getRemoteAddr());
+        final Event triggerEvent = eventService.acceptAdminTrigger(request, clientUrl);
+        eventService.triggerMetadataRetrieval(triggerEvent);
     }
 }
