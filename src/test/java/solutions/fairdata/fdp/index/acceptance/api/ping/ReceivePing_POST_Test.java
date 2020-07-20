@@ -66,7 +66,7 @@ public class ReceivePing_POST_Test extends WebIntegrationTest {
 
     @Test
     @DisplayName("HTTP 204: new entry")
-    public void res204_newEnty() {
+    public void res204_newEntry() {
         // GIVEN (prepare data)
         String clientUrl = "http://example.com";
         mongoTemplate.getDb().drop();

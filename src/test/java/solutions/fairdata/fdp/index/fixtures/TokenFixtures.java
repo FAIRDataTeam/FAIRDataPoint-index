@@ -20,32 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index;
+package solutions.fairdata.fdp.index.fixtures;
 
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import solutions.fairdata.fdp.index.entity.Token;
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles(Profiles.TESTING)
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = {"spring.main.allow-bean-definition-overriding=true"})
-@AutoConfigureMockMvc
-public abstract class WebIntegrationTest {
+import java.util.List;
 
-    @Autowired
-    protected MongoTemplate mongoTemplate;
+public class TokenFixtures {
 
-    @Autowired
-    protected MockMvc mvc;
+    public static Token adminToken() {
+        var token = new Token();
+        token.setName("admin");
+        token.setNote("This is admin token for tests");
+        token.setToken("myVerySecretToken123");
+        token.setRoles(List.of("ROLE_ADMIN"));
+        return token;
+    }
 
-    @Autowired
-    protected TestRestTemplate client;
+    public static Token noRoleToken() {
+        var token = new Token();
+        token.setName("no_role");
+        token.setNote("This is admin token for tests");
+        token.setToken("myTokenWithoutAnyRole");
+        token.setRoles(List.of());
+        return token;
+    }
 }
