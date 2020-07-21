@@ -60,6 +60,7 @@ public class Event {
     // Content (one of those)
     private IncomingPing incomingPing;
     private MetadataRetrieval metadataRetrieval;
+    private AdminTrigger adminTrigger;
 
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -99,5 +100,11 @@ public class Event {
         this.triggeredBy = triggerEvent;
         this.relatedTo = relatedTo;
         this.metadataRetrieval = metadataRetrieval;
+    }
+
+    public Event(Integer version, AdminTrigger adminTrigger) {
+        this.type = EventType.AdminTrigger;
+        this.version = version;
+        this.adminTrigger = adminTrigger;
     }
 }

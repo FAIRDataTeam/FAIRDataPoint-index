@@ -20,10 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity.events;
+package solutions.fairdata.fdp.index.exceptions;
 
-public enum EventType {
-    AdminTrigger,
-    MetadataRetrieval,
-    IncomingPing;
+import org.springframework.http.HttpStatus;
+
+public class NotFoundException extends IndexException {
+
+    public NotFoundException(String message) {
+        super(message, HttpStatus.NOT_FOUND);
+    }
 }

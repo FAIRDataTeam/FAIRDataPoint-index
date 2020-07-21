@@ -27,13 +27,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import solutions.fairdata.fdp.index.entity.IndexEntry;
 import solutions.fairdata.fdp.index.entity.events.Event;
+import solutions.fairdata.fdp.index.entity.events.EventType;
 
 import java.time.Instant;
 import java.util.List;
 
 public interface EventRepository extends MongoRepository<Event, String> {
 
-    Iterable<Event> getAllByFinishedIsNull();
+    List<Event> getAllByType(EventType type);
+
+    List<Event> getAllByFinishedIsNull();
 
     Page<Event> getAllByRelatedTo(IndexEntry indexEntry, Pageable pageable);
 

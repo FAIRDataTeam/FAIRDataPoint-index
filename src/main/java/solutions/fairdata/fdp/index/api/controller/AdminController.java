@@ -20,32 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index;
+package solutions.fairdata.fdp.index.api.controller;
 
-import org.junit.jupiter.api.extension.ExtendWith;
+import io.swagger.v3.oas.annotations.Operation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import solutions.fairdata.fdp.index.entity.events.Event;
+import solutions.fairdata.fdp.index.service.EventService;
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles(Profiles.TESTING)
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = {"spring.main.allow-bean-definition-overriding=true"})
-@AutoConfigureMockMvc
-public abstract class WebIntegrationTest {
+import javax.servlet.http.HttpServletRequest;
+
+@RestController
+@RequestMapping("/admin")
+public class AdminController {
+    private static final Logger logger = LoggerFactory.getLogger(PingController.class);
 
     @Autowired
-    protected MongoTemplate mongoTemplate;
+    private EventService eventService;
 
-    @Autowired
-    protected MockMvc mvc;
-
-    @Autowired
-    protected TestRestTemplate client;
+    @Operation(hidden = true)
+    @PostMapping("/trigger")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void triggerMetadataRetrieveOne(@RequestParam(required = false) String clientUrl, HttpServletRequest request) {
+        logger.info("Received ping from {}", request.getRemoteAddr());
+        final Event triggerEvent = eventService.acceptAdminTrigger(request, clientUrl);
+        eventService.triggerMetadataRetrieval(triggerEvent);
+    }
 }

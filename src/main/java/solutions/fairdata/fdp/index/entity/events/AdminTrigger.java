@@ -22,8 +22,15 @@
  */
 package solutions.fairdata.fdp.index.entity.events;
 
-public enum EventType {
-    AdminTrigger,
-    MetadataRetrieval,
-    IncomingPing;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class AdminTrigger {
+    private String remoteAddr;
+    private String tokenName;
+    private String clientUrl;
 }

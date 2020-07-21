@@ -20,32 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index;
+package solutions.fairdata.fdp.index.service;
 
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
+import solutions.fairdata.fdp.index.database.repository.TokenRepository;
+import solutions.fairdata.fdp.index.entity.Token;
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles(Profiles.TESTING)
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = {"spring.main.allow-bean-definition-overriding=true"})
-@AutoConfigureMockMvc
-public abstract class WebIntegrationTest {
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class TokenService {
 
     @Autowired
-    protected MongoTemplate mongoTemplate;
+    private TokenRepository tokenRepository;
 
-    @Autowired
-    protected MockMvc mvc;
+    public Optional<Authentication> getAuthentication(String token) {
+        // Currently just verify presence of token in DB,
+        // in the future there might be some permissions
+        return tokenRepository.findByToken(token).map(this::toAuthentication);
+    }
 
-    @Autowired
-    protected TestRestTemplate client;
+    private Authentication toAuthentication(Token token) {
+        return new UsernamePasswordAuthenticationToken(
+                token.getName(), token.getToken(),
+                token.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+        );
+    }
 }

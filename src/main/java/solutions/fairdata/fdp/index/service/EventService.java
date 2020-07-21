@@ -33,6 +33,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import solutions.fairdata.fdp.index.api.dto.PingDTO;
 import solutions.fairdata.fdp.index.database.repository.EventRepository;
@@ -45,13 +47,16 @@ import solutions.fairdata.fdp.index.entity.events.EventType;
 import solutions.fairdata.fdp.index.entity.http.Exchange;
 import solutions.fairdata.fdp.index.entity.http.ExchangeState;
 import solutions.fairdata.fdp.index.exceptions.IncorrectPingFormatException;
+import solutions.fairdata.fdp.index.exceptions.NotFoundException;
 import solutions.fairdata.fdp.index.exceptions.RateLimitException;
+import solutions.fairdata.fdp.index.utils.AdminTriggerUtils;
 import solutions.fairdata.fdp.index.utils.IncomingPingUtils;
 import solutions.fairdata.fdp.index.utils.MetadataRetrievalUtils;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
+import java.util.Optional;
 
 @Service
 public class EventService {
@@ -165,13 +170,17 @@ public class EventService {
 
     @Async
     public void triggerMetadataRetrieval(Event triggerEvent) {
-        var event = MetadataRetrievalUtils.prepareEvent(triggerEvent);
-        logger.info("Triggering metadata retrieval for " + triggerEvent.getRelatedTo().getClientUrl());
-        try {
-            processMetadataRetrieval(event);
-        } catch (Exception e) {
-            logger.error("Failed to retrieve metadata: " + e.getMessage());
+        logger.info("Initiating metadata retrieval triggered by " + triggerEvent.getUuid());
+        Iterable<Event> events = MetadataRetrievalUtils.prepareEvents(triggerEvent, indexEntryService);
+        for (Event event: events) {
+            logger.info("Triggering metadata retrieval for " + event.getRelatedTo().getClientUrl() + " as " + event.getUuid());
+            try {
+                processMetadataRetrieval(event);
+            } catch (Exception e) {
+                logger.error("Failed to retrieve metadata: " + e.getMessage());
+            }
         }
+        logger.info("Finished metadata retrieval triggered by " + triggerEvent.getUuid());
     }
 
     private void resumeUnfinishedEvents() {
@@ -195,5 +204,18 @@ public class EventService {
     @PostConstruct
     public void startResumeUnfinishedEvents() {
         executor.submit(this::resumeUnfinishedEvents);
+    }
+
+    public Event acceptAdminTrigger(HttpServletRequest request, String clientUrl) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Event event = AdminTriggerUtils.prepareEvent(request, authentication, clientUrl);
+        if (clientUrl != null) {
+            Optional<IndexEntry> entry = indexEntryService.findEntry(clientUrl);
+            if (entry.isEmpty()) {
+                throw new NotFoundException("The is no such entry: " + clientUrl);
+            }
+            event.setRelatedTo(entry.get());
+        }
+        return eventRepository.save(event);
     }
 }

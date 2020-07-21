@@ -20,10 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity.events;
+package solutions.fairdata.fdp.index.fixtures;
 
-public enum EventType {
-    AdminTrigger,
-    MetadataRetrieval,
-    IncomingPing;
+import solutions.fairdata.fdp.index.entity.Token;
+
+import java.util.List;
+
+public class TokenFixtures {
+
+    public static Token adminToken() {
+        var token = new Token();
+        token.setName("admin");
+        token.setNote("This is admin token for tests");
+        token.setToken("myVerySecretToken123");
+        token.setRoles(List.of("ROLE_ADMIN"));
+        return token;
+    }
+
+    public static Token noRoleToken() {
+        var token = new Token();
+        token.setName("no_role");
+        token.setNote("This is admin token for tests");
+        token.setToken("myTokenWithoutAnyRole");
+        token.setRoles(List.of());
+        return token;
+    }
 }
