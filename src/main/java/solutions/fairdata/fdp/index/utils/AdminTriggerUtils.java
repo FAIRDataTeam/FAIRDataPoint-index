@@ -34,7 +34,6 @@ public class AdminTriggerUtils {
 
     public static Event prepareEvent(HttpServletRequest request, Authentication authentication, String clientUrl) {
         var adminTrigger = new AdminTrigger();
-        System.out.println(authentication);
         adminTrigger.setRemoteAddr(request.getRemoteAddr());
         adminTrigger.setTokenName(authentication.getName());
         adminTrigger.setClientUrl(clientUrl);

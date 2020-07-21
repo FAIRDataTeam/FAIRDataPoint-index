@@ -51,10 +51,8 @@ public class TokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String token = getToken(request);
-        System.out.println("TOKEN: " + token);
         if (token != null) {
             Optional<Authentication> auth = tokenService.getAuthentication(token);
-            System.out.println(auth);
             auth.ifPresent(a -> SecurityContextHolder.getContext().setAuthentication(a));
         }
         filterChain.doFilter(request, response);
