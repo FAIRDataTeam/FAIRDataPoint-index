@@ -78,6 +78,9 @@ public class EventService {
     private IndexEntryService indexEntryService;
 
     @Autowired
+    private WebhookService webhookService;
+
+    @Autowired
     private EventsConfig eventsConfig;
 
     public Iterable<Event> getEvents(IndexEntry indexEntry) {
@@ -108,6 +111,7 @@ public class EventService {
         try {
             var pingDTO = objectMapper.readValue(httpEntity.getBody(), PingDTO.class);
             var indexEntry = indexEntryService.storeEntry(pingDTO);
+            event.getIncomingPing().setNewEntry(indexEntry.getRegistrationTime().equals(indexEntry.getModificationTime()));
             event.getIncomingPing().getExchange().getResponse().setCode(204);
             event.setRelatedTo(indexEntry);
             logger.info("Accepted incoming ping as a new event");
@@ -164,8 +168,9 @@ public class EventService {
         }
         event.getRelatedTo().setLastRetrievalTime(Instant.now());
         event.finish();
-        eventRepository.save(event);
+        event = eventRepository.save(event);
         indexEntryRepository.save(event.getRelatedTo());
+        webhookService.triggerWebhooks(event);
     }
 
     @Async
@@ -191,6 +196,8 @@ public class EventService {
             try {
                 if (event.getType() == EventType.MetadataRetrieval) {
                     processMetadataRetrieval(event);
+                } else if (event.getType() == EventType.WebhookTrigger) {
+                    webhookService.processWebhookTrigger(event);
                 } else {
                     logger.warn("Unknown event type " + event.getUuid());
                 }
@@ -212,7 +219,7 @@ public class EventService {
         if (clientUrl != null) {
             Optional<IndexEntry> entry = indexEntryService.findEntry(clientUrl);
             if (entry.isEmpty()) {
-                throw new NotFoundException("The is no such entry: " + clientUrl);
+                throw new NotFoundException("There is no such entry: " + clientUrl);
             }
             event.setRelatedTo(entry.get());
         }

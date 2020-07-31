@@ -20,17 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity.events;
+package solutions.fairdata.fdp.index.database.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import solutions.fairdata.fdp.index.entity.http.Exchange;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import solutions.fairdata.fdp.index.entity.webhooks.Webhook;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class IncomingPing {
-    private Exchange exchange;
-    private Boolean newEntry;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface WebhookRepository extends MongoRepository<Webhook, String> {
+    Optional<Webhook> findByUuid(UUID uuid);
 }

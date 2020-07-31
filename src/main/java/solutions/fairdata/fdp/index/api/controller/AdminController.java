@@ -31,8 +31,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import solutions.fairdata.fdp.index.entity.events.Event;
 import solutions.fairdata.fdp.index.service.EventService;
+import solutions.fairdata.fdp.index.service.WebhookService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/admin")
@@ -42,13 +44,27 @@ public class AdminController {
     @Autowired
     private EventService eventService;
 
+    @Autowired
+    private WebhookService webhookService;
+
     @Operation(hidden = true)
     @PostMapping("/trigger")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void triggerMetadataRetrieveOne(@RequestParam(required = false) String clientUrl, HttpServletRequest request) {
+    public void triggerMetadataRetrieve(@RequestParam(required = false) String clientUrl, HttpServletRequest request) {
         logger.info("Received ping from {}", request.getRemoteAddr());
-        final Event triggerEvent = eventService.acceptAdminTrigger(request, clientUrl);
-        eventService.triggerMetadataRetrieval(triggerEvent);
+        final Event event = eventService.acceptAdminTrigger(request, clientUrl);
+        webhookService.triggerWebhooks(event);
+        eventService.triggerMetadataRetrieval(event);
+    }
+
+    @Operation(hidden = true)
+    @PostMapping("/ping-webhook")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void webhookPing(@RequestParam(required = true) UUID webhook, HttpServletRequest request) {
+        logger.info("Received webhook {} ping trigger from {}", webhook, request.getRemoteAddr());
+        final Event event = webhookService.handleWebhookPing(request, webhook);
+        webhookService.triggerWebhooks(event);
     }
 }

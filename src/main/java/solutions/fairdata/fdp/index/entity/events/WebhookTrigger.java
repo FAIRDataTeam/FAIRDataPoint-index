@@ -25,12 +25,19 @@ package solutions.fairdata.fdp.index.entity.events;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import solutions.fairdata.fdp.index.entity.http.Exchange;
+import solutions.fairdata.fdp.index.entity.webhooks.Webhook;
+import solutions.fairdata.fdp.index.entity.webhooks.WebhookEvent;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class IncomingPing {
+public class WebhookTrigger {
+    @DBRef
+    private Webhook webhook;
+
+    private WebhookEvent matchedEvent;
+
     private Exchange exchange;
-    private Boolean newEntry;
 }

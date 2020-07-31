@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 import solutions.fairdata.fdp.index.api.dto.PingDTO;
 import solutions.fairdata.fdp.index.entity.events.Event;
 import solutions.fairdata.fdp.index.service.EventService;
+import solutions.fairdata.fdp.index.service.WebhookService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -52,6 +53,9 @@ public class PingController {
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private WebhookService webhookService;
 
     @Operation(
             description = "Inform about running FAIR Data Point. It is expected to send pings regularly (at least weekly). There is a rate limit set both per single IP within a period of time and per URL in message.",
@@ -80,8 +84,9 @@ public class PingController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void receivePing(HttpEntity<String> httpEntity, HttpServletRequest request) {
         logger.info("Received ping from {}", request.getRemoteAddr());
-        final Event incomingPingEvent = eventService.acceptIncomingPing(httpEntity, request);
-        logger.info("Triggering metadata retrieval for {}", incomingPingEvent.getRelatedTo().getClientUrl());
-        eventService.triggerMetadataRetrieval(incomingPingEvent);
+        final Event event = eventService.acceptIncomingPing(httpEntity, request);
+        logger.info("Triggering metadata retrieval for {}", event.getRelatedTo().getClientUrl());
+        eventService.triggerMetadataRetrieval(event);
+        webhookService.triggerWebhooks(event);
     }
 }

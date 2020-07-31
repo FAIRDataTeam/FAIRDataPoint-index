@@ -20,17 +20,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity.events;
+package solutions.fairdata.fdp.index.entity.webhooks;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import solutions.fairdata.fdp.index.entity.http.Exchange;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class IncomingPing {
-    private Exchange exchange;
-    private Boolean newEntry;
+@Document(collection = "event")
+public class Webhook {
+    @Id
+    protected ObjectId id;
+
+    @Indexed(unique=true)
+    @NotNull
+    private UUID uuid = UUID.randomUUID();
+
+    private String payloadUrl;
+
+    private String secret;
+
+    private boolean allEvents;
+
+    private List<WebhookEvent> events = new ArrayList<>();
+
+    private boolean allEntries;
+
+    private List<String> entries = new ArrayList<>();
+
+    private boolean enabled;
 }
