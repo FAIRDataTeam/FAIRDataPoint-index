@@ -199,7 +199,7 @@ public class EventService {
                 } else if (event.getType() == EventType.WebhookTrigger) {
                     webhookService.processWebhookTrigger(event);
                 } else {
-                    logger.warn("Unknown event type " + event.getUuid());
+                    logger.warn("Unknown event type " + event.getUuid() + " (" + event.getType() + ")");
                 }
             } catch (Exception e) {
                 logger.error("Failed to resume event " + event.getUuid() + ": " + e.getMessage());
@@ -223,6 +223,7 @@ public class EventService {
             }
             event.setRelatedTo(entry.get());
         }
+        event.finish();
         return eventRepository.save(event);
     }
 }

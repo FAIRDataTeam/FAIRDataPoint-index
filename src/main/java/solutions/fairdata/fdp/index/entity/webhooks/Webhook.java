@@ -38,7 +38,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "event")
+@Document(collection = "webhook")
 public class Webhook {
     @Id
     protected ObjectId id;
