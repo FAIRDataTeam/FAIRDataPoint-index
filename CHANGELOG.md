@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Simple webhooks (from database) with possibility to select specific event(s) and/or
+  specific entries
 - Ability to trigger metadata retrieval using secured API endpoints (admin-only)
 
 ## [0.2.0]

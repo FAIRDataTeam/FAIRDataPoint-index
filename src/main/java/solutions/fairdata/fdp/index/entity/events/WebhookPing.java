@@ -25,12 +25,14 @@ package solutions.fairdata.fdp.index.entity.events;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import solutions.fairdata.fdp.index.entity.http.Exchange;
+
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class IncomingPing {
-    private Exchange exchange;
-    private Boolean newEntry;
+public class WebhookPing {
+    private String remoteAddr;
+    private String tokenName;
+    private UUID webhookUuid;
 }

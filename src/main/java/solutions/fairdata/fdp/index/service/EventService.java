@@ -78,6 +78,9 @@ public class EventService {
     private IndexEntryService indexEntryService;
 
     @Autowired
+    private WebhookService webhookService;
+
+    @Autowired
     private EventsConfig eventsConfig;
 
     public Iterable<Event> getEvents(IndexEntry indexEntry) {
@@ -95,7 +98,7 @@ public class EventService {
         var rateLimitSince = Instant.now().minus(eventsConfig.getPingRateLimitDuration());
         var previousPings = eventRepository.findAllByIncomingPingExchangeRemoteAddrAndCreatedAfter(remoteAddr, rateLimitSince);
         if (previousPings.size() > eventsConfig.getPingRateLimitHits()) {
-            logger.warn("Rate limit for PING reached by: " + remoteAddr);
+            logger.warn("Rate limit for PING reached by {}", remoteAddr);
             throw new RateLimitException(String.format(
                     "Rate limit reached for %s (max. %d per %s) - PING ignored",
                     remoteAddr, eventsConfig.getPingRateLimitHits(), eventsConfig.getPingRateLimitDuration().toString())
@@ -108,6 +111,7 @@ public class EventService {
         try {
             var pingDTO = objectMapper.readValue(httpEntity.getBody(), PingDTO.class);
             var indexEntry = indexEntryService.storeEntry(pingDTO);
+            event.getIncomingPing().setNewEntry(indexEntry.getRegistrationTime().equals(indexEntry.getModificationTime()));
             event.getIncomingPing().getExchange().getResponse().setCode(204);
             event.setRelatedTo(indexEntry);
             logger.info("Accepted incoming ping as a new event");
@@ -117,7 +121,7 @@ public class EventService {
             event.getIncomingPing().getExchange().getResponse().setBody(objectMapper.writeValueAsString(ex.getErrorDTO()));
             event.setFinished(Instant.now());
             eventRepository.save(event);
-            logger.info("Incoming ping has incorrect format: " + e.getMessage());
+            logger.info("Incoming ping has incorrect format: {}", e.getMessage());
             throw ex;
         }
         event.setFinished(Instant.now());
@@ -131,71 +135,74 @@ public class EventService {
             eventRepository.save(event);
             event.execute();
 
-            logger.info("Retrieving metadata for " + clientUrl);
+            logger.info("Retrieving metadata for {}", clientUrl);
             MetadataRetrievalUtils.retrieveRepositoryMetadata(event, eventsConfig.getRetrievalTimeout());
             Exchange ex = event.getMetadataRetrieval().getExchange();
             if (ex.getState() == ExchangeState.Retrieved) {
                 try {
-                    logger.info("Parsing metadata for " + clientUrl);
+                    logger.info("Parsing metadata for {}", clientUrl);
                     var metadata = MetadataRetrievalUtils.parseRepositoryMetadata(ex.getResponse().getBody());
                     if (metadata.isPresent()) {
                         event.getMetadataRetrieval().setMetadata(metadata.get());
                         event.getRelatedTo().setCurrentMetadata(metadata.get());
                         event.getRelatedTo().setState(IndexEntryState.Valid);
-                        logger.info("Storing metadata for " + clientUrl);
+                        logger.info("Storing metadata for {}", clientUrl);
                         indexEntryRepository.save(event.getRelatedTo());
                     } else {
-                        logger.info("Repository not found in metadata for " + clientUrl);
+                        logger.info("Repository not found in metadata for {}", clientUrl);
                         event.getRelatedTo().setState(IndexEntryState.Invalid);
                         event.getMetadataRetrieval().setError("Repository not found in metadata");
                     }
                 } catch (Exception e) {
-                    logger.info("Cannot parse metadata for " + clientUrl);
+                    logger.info("Cannot parse metadata for {}", clientUrl);
                     event.getRelatedTo().setState(IndexEntryState.Invalid);
                     event.getMetadataRetrieval().setError("Cannot parse metadata");
                 }
             } else {
                 event.getRelatedTo().setState(IndexEntryState.Unreachable);
-                logger.info("Cannot retrieve metadata for " + clientUrl + ": " + ex.getError());
+                logger.info("Cannot retrieve metadata for {}: {}", clientUrl, ex.getError());
             }
         } else {
-            logger.info("Rate limit reached for " + clientUrl + " (skipping metadata retrieval)");
+            logger.info("Rate limit reached for {} (skipping metadata retrieval)", clientUrl);
             event.getMetadataRetrieval().setError("Rate limit reached (skipping)");
         }
         event.getRelatedTo().setLastRetrievalTime(Instant.now());
         event.finish();
-        eventRepository.save(event);
+        event = eventRepository.save(event);
         indexEntryRepository.save(event.getRelatedTo());
+        webhookService.triggerWebhooks(event);
     }
 
     @Async
     public void triggerMetadataRetrieval(Event triggerEvent) {
-        logger.info("Initiating metadata retrieval triggered by " + triggerEvent.getUuid());
+        logger.info("Initiating metadata retrieval triggered by {}", triggerEvent.getUuid());
         Iterable<Event> events = MetadataRetrievalUtils.prepareEvents(triggerEvent, indexEntryService);
         for (Event event: events) {
-            logger.info("Triggering metadata retrieval for " + event.getRelatedTo().getClientUrl() + " as " + event.getUuid());
+            logger.info("Triggering metadata retrieval for {} as {}", event.getRelatedTo().getClientUrl(), event.getUuid());
             try {
                 processMetadataRetrieval(event);
             } catch (Exception e) {
-                logger.error("Failed to retrieve metadata: " + e.getMessage());
+                logger.error("Failed to retrieve metadata: {}", e.getMessage());
             }
         }
-        logger.info("Finished metadata retrieval triggered by " + triggerEvent.getUuid());
+        logger.info("Finished metadata retrieval triggered by {}", triggerEvent.getUuid());
     }
 
     private void resumeUnfinishedEvents() {
         logger.info("Resuming unfinished events");
         for (Event event : eventRepository.getAllByFinishedIsNull()) {
-            logger.info("Resuming event " + event.getUuid());
+            logger.info("Resuming event {}", event.getUuid());
 
             try {
                 if (event.getType() == EventType.MetadataRetrieval) {
                     processMetadataRetrieval(event);
+                } else if (event.getType() == EventType.WebhookTrigger) {
+                    webhookService.processWebhookTrigger(event);
                 } else {
-                    logger.warn("Unknown event type " + event.getUuid());
+                    logger.warn("Unknown event type {} ({})", event.getUuid(), event.getType());
                 }
             } catch (Exception e) {
-                logger.error("Failed to resume event " + event.getUuid() + ": " + e.getMessage());
+                logger.error("Failed to resume event {}: {}", event.getUuid(), e.getMessage());
             }
         }
         logger.info("Finished unfinished events");
@@ -212,10 +219,11 @@ public class EventService {
         if (clientUrl != null) {
             Optional<IndexEntry> entry = indexEntryService.findEntry(clientUrl);
             if (entry.isEmpty()) {
-                throw new NotFoundException("The is no such entry: " + clientUrl);
+                throw new NotFoundException("There is no such entry: " + clientUrl);
             }
             event.setRelatedTo(entry.get());
         }
+        event.finish();
         return eventRepository.save(event);
     }
 }

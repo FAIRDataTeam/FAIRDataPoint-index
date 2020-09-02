@@ -20,17 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index.entity.events;
+package solutions.fairdata.fdp.index.api.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import solutions.fairdata.fdp.index.entity.http.Exchange;
+import solutions.fairdata.fdp.index.entity.webhooks.WebhookEvent;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class IncomingPing {
-    private Exchange exchange;
-    private Boolean newEntry;
+public class WebhookPayloadDTO {
+    private WebhookEvent event;
+    private String uuid;
+    private String clientUrl;
+    private String timestamp;
+    private String secret;
 }

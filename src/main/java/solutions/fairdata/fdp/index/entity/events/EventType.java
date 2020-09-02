@@ -25,5 +25,7 @@ package solutions.fairdata.fdp.index.entity.events;
 public enum EventType {
     AdminTrigger,
     MetadataRetrieval,
-    IncomingPing;
+    WebhookTrigger,
+    IncomingPing,
+    WebhookPing,
 }
