@@ -92,7 +92,7 @@ public class WebhookService {
 
     @Async
     public void triggerWebhooks(WebhookEvent webhookEvent, Event triggerEvent) {
-        logger.info("Triggered webhook event " + webhookEvent + " by event " + triggerEvent.getUuid());
+        logger.info("Triggered webhook event {} by event {}", webhookEvent, triggerEvent.getUuid());
         WebhookUtils.filterMatching(webhookRepository.findAll(), webhookEvent, triggerEvent).forEach(webhook -> triggerWebhook(webhook, webhookEvent, triggerEvent));
     }
 
@@ -130,14 +130,14 @@ public class WebhookService {
                         triggerWebhooks(WebhookEvent.EntryUnreachable, triggerEvent);
                         break;
                     default:
-                        logger.warn("Invalid state of MetadataRetrieval: " + triggerEvent.getRelatedTo().getState());
+                        logger.warn("Invalid state of MetadataRetrieval: {}", triggerEvent.getRelatedTo().getState());
                 }
                 break;
             case WebhookPing:
                 triggerWebhooks(WebhookEvent.WebhookPing, triggerEvent);
                 break;
             default:
-                logger.warn("Invalid event type for webhook trigger: " + triggerEvent.getType());
+                logger.warn("Invalid event type for webhook trigger: {}", triggerEvent.getType());
         }
     }
 }
