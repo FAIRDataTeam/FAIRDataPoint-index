@@ -35,7 +35,7 @@
 
     <groupId>solutions.fairdata</groupId>
     <artifactId>fairdatapoint-index</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.3.0</version>
 
     <inceptionYear>2020</inceptionYear>
 

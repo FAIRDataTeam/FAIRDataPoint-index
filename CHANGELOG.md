@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0]
+
+The final release as the Index has been moved to [FAIR Data Point](https://github.com/FAIRDataTeam/FAIRDataPoint) (in [38a5fbd](https://github.com/FAIRDataTeam/FAIRDataPoint/commit/38a5fbdf3bc988447beda2c5daaa1938f15e5408)).
 
 ### Added
 
@@ -38,7 +40,7 @@ Initial version for simple list of FAIR Data Points.
 - REST API to retrieve entries list (both all and paged) documented using Swagger/OpenAPI
 - Simple webpage with table to browse entries including sorting and pagination
 
-[Unreleased]: /../../compare/v0.2.0...develop
 [0.1.0]: /../../tree/v0.1.0
 [0.1.1]: /../../tree/v0.1.1
 [0.2.0]: /../../tree/v0.2.0
+[0.3.0]: /../../tree/v0.3.0
