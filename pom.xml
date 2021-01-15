@@ -35,7 +35,7 @@
 
     <groupId>solutions.fairdata</groupId>
     <artifactId>fairdatapoint-index</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 
     <inceptionYear>2020</inceptionYear>
 
@@ -55,6 +55,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

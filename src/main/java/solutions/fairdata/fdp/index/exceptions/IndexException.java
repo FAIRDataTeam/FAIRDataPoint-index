@@ -25,7 +25,7 @@ package solutions.fairdata.fdp.index.exceptions;
 import org.springframework.http.HttpStatus;
 import solutions.fairdata.fdp.index.api.dto.ErrorDTO;
 
-public abstract class IndexException extends Exception {
+public abstract class IndexException extends RuntimeException {
 
     protected final HttpStatus status;
 

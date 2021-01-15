@@ -20,32 +20,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index;
+package solutions.fairdata.fdp.index.entity;
 
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import lombok.Data;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles(Profiles.TESTING)
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = {"spring.main.allow-bean-definition-overriding=true"})
-@AutoConfigureMockMvc
-public abstract class WebIntegrationTest {
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
-    @Autowired
-    protected MongoTemplate mongoTemplate;
-
-    @Autowired
-    protected MockMvc mvc;
-
-    @Autowired
-    protected TestRestTemplate client;
+@Document
+@Data
+public class Token {
+    @Id
+    protected ObjectId id;
+    @Indexed(unique=true)
+    private String token;
+    @NotNull
+    private String name;
+    @NotNull
+    private List<String> roles;
+    @NotNull
+    private String note;
 }

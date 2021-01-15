@@ -32,4 +32,5 @@ import solutions.fairdata.fdp.index.entity.http.Exchange;
 @AllArgsConstructor
 public class IncomingPing {
     private Exchange exchange;
+    private Boolean newEntry;
 }

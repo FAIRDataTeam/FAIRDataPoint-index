@@ -20,32 +20,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index;
+package solutions.fairdata.fdp.index.entity.webhooks;
 
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles(Profiles.TESTING)
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = {"spring.main.allow-bean-definition-overriding=true"})
-@AutoConfigureMockMvc
-public abstract class WebIntegrationTest {
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-    @Autowired
-    protected MongoTemplate mongoTemplate;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Document(collection = "webhook")
+public class Webhook {
+    @Id
+    protected ObjectId id;
 
-    @Autowired
-    protected MockMvc mvc;
+    @Indexed(unique=true)
+    @NotNull
+    private UUID uuid = UUID.randomUUID();
 
-    @Autowired
-    protected TestRestTemplate client;
+    private String payloadUrl;
+
+    private String secret;
+
+    private boolean allEvents;
+
+    private List<WebhookEvent> events = new ArrayList<>();
+
+    private boolean allEntries;
+
+    private List<String> entries = new ArrayList<>();
+
+    private boolean enabled;
 }

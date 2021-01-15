@@ -60,6 +60,9 @@ public class Event {
     // Content (one of those)
     private IncomingPing incomingPing;
     private MetadataRetrieval metadataRetrieval;
+    private AdminTrigger adminTrigger;
+    private WebhookPing webhookPing;
+    private WebhookTrigger webhookTrigger;
 
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -99,5 +102,25 @@ public class Event {
         this.triggeredBy = triggerEvent;
         this.relatedTo = relatedTo;
         this.metadataRetrieval = metadataRetrieval;
+    }
+
+    public Event(Integer version, AdminTrigger adminTrigger) {
+        this.type = EventType.AdminTrigger;
+        this.version = version;
+        this.adminTrigger = adminTrigger;
+    }
+
+    public Event(Integer version, WebhookTrigger webhookTrigger, Event triggerEvent) {
+        this.type = EventType.WebhookTrigger;
+        this.version = version;
+        this.webhookTrigger = webhookTrigger;
+        this.triggeredBy = triggerEvent;
+        this.relatedTo = triggerEvent.getRelatedTo();
+    }
+
+    public Event(Integer version, WebhookPing webhookPing) {
+        this.type = EventType.WebhookPing;
+        this.version = version;
+        this.webhookPing = webhookPing;
     }
 }

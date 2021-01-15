@@ -20,32 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package solutions.fairdata.fdp.index;
+package solutions.fairdata.fdp.index.utils;
 
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.core.Authentication;
+import solutions.fairdata.fdp.index.entity.events.AdminTrigger;
+import solutions.fairdata.fdp.index.entity.events.Event;
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles(Profiles.TESTING)
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = {"spring.main.allow-bean-definition-overriding=true"})
-@AutoConfigureMockMvc
-public abstract class WebIntegrationTest {
+import javax.servlet.http.HttpServletRequest;
 
-    @Autowired
-    protected MongoTemplate mongoTemplate;
+public class AdminTriggerUtils {
 
-    @Autowired
-    protected MockMvc mvc;
+    private static final Integer VERSION = 1;
 
-    @Autowired
-    protected TestRestTemplate client;
+    public static Event prepareEvent(HttpServletRequest request, Authentication authentication, String clientUrl) {
+        var adminTrigger = new AdminTrigger();
+        adminTrigger.setRemoteAddr(request.getRemoteAddr());
+        adminTrigger.setTokenName(authentication.getName());
+        adminTrigger.setClientUrl(clientUrl);
+        return new Event(VERSION, adminTrigger);
+    }
 }
